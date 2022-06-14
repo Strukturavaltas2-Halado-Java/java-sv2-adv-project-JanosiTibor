@@ -1,0 +1,132 @@
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Covid-19",
+  "startDate": "2022-05-23",
+  "budget": 95000000
+}
+
+###
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Ampa receptor",
+  "startDate": "2022-08-31",
+  "budget": 5000000
+}
+
+###
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "3D Single Molecule Detection",
+  "startDate": "2022-09-01",
+  "budget": 75000000
+}
+
+###
+POST http://localhost:8080/api/cars
+Content-Type: application/json
+Accept: application/json
+
+{
+  "brand": "Toyota",
+  "type": "Auris",
+  "age": 5,
+  "condition": "EXCELLENT",
+  "kmCounter": 55892
+}
+
+###
+GET http://localhost:8080/api/cars
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?OrderBy=km&OrderType=desc
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/cars?OrderBy=km&OrderType=asc
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?OrderBy=age&OrderType=desc
+Accept: application/json
+
+###
+
+GET http://localhost:8080/api/cars?OrderBy=age&OrderType=asc
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?brand=toyota
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?maxAge=20
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?brand=Toyota&maxAge=17
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?brand=Toyota&OrderBy=km
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?brand=Toyota&OrderBy=km&OrderType=desc
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars?brand=Toyota&maxAge=15&OrderBy=km&OrderType=desc
+Accept: application/json
+
+###
+GET http://localhost:8080/api/cars/brands
+Accept: application/json
+
+###
+POST http://localhost:8080/api/cars/1/kilometerstates
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kmCounter": 396230
+}
+
+###
+POST http://localhost:8080/api/cars/1/kilometerstates
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kmCounter": 6230
+}
+
+###
+POST http://localhost:8080/api/cars/1/kilometerstates
+Content-Type: application/json
+Accept: application/json
+
+{
+  "kmCounter": -6230
+}
+
+###
+GET http://localhost:8080/api/cars/1
+Accept: application/json
+
+###
+DELETE http://localhost:8080/api/cars/269
+Content-Type: application/json
+Accept: application/json
+
+###

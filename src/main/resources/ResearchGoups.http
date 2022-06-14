@@ -1,0 +1,70 @@
+POST http://localhost:8080/api/car-sellers
+Content-Type: application/json
+
+{
+  "name": "Stefi"
+}
+
+###
+POST http://localhost:8080/api/car-sellers
+Content-Type: application/json
+
+{
+  "name": "Józsi"
+}
+
+###
+
+POST http://localhost:8080/api/car-sellers
+Content-Type: application/json
+
+{
+  "name": "BuliBáró"
+}
+
+###
+
+POST http://localhost:8080/api/car-sellers/1/cars
+Content-Type: application/json
+Accept: application/json
+
+{
+  "brand": "Kia",
+  "type": "Cedd",
+  "age": 16,
+  "condition": "EXCELLENT",
+  "kmCounter": 169000
+}
+
+###
+
+POST http://localhost:8080/api/car-sellers/2/cars
+Content-Type: application/json
+Accept: application/json
+
+{
+  "brand": "BMW",
+  "type": "x5",
+  "age": 19,
+  "condition": "NORMAL",
+  "kmCounter": 50000
+}
+###
+POST http://localhost:8080/api/car-sellers/3/cars
+Content-Type: application/json
+Accept: application/json
+
+{
+"brand": "Trabant",
+"type": "601",
+"age": 46,
+"condition": "EXCELLENT",
+"kmCounter": 109000
+}
+
+###
+DELETE http://localhost:8080/api/car-sellers/2
+Content-Type: application/json
+Accept: application/json
+
+###
