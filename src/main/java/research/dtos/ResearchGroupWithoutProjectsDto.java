@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import research.model.Location;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,6 +15,8 @@ import research.model.Location;
 public class ResearchGroupWithoutProjectsDto {
     private Long id;
     private String name;
+    private LocalDate founded;
+    private int countOfResearchers;
     private Location location;
     private int budget;
 }

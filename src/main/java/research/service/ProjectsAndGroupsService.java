@@ -1,30 +1,29 @@
 package research.service;
 
-import research.criteria.CarCriteria;
 import research.dtos.CreateProjectCommand;
+import research.dtos.CreateResearchGroupCommand;
 import research.dtos.ProjectDto;
-import research.exceptions.CarNotFoundException;
-import research.exceptions.CarSellerNotFoundException;
-import research.exceptions.IllegalKmStateException;
-import research.model.OrderBy;
-import research.model.OrderType;
+import research.dtos.ResearchGroupDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import research.exceptions.ProjectNotFoundException;
+import research.exceptions.ResearchGroupNotFoundException;
 import research.model.Project;
+import research.model.ResearchGroup;
+import research.repository.ResearchGroupsRepository;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ProjectsAndGroupsService {
     private ModelMapper modelMapper;
     private research.repository.ProjectsRepository projectsRepository;
-    private research.repository.ResearchGroupRepository researchGroupRepository;
+    private ResearchGroupsRepository researchGroupsRepository;
 
-    public ProjectsAndGroupsService(ModelMapper modelMapper, research.repository.ProjectsRepository projectsRepository, research.repository.ResearchGroupRepository researchGroupRepository) {
+    public ProjectsAndGroupsService(ModelMapper modelMapper, research.repository.ProjectsRepository projectsRepository, ResearchGroupsRepository researchGroupsRepository) {
         this.modelMapper = modelMapper;
         this.projectsRepository = projectsRepository;
-        this.researchGroupRepository = researchGroupRepository;
+        this.researchGroupsRepository = researchGroupsRepository;
     }
 
     public ProjectDto createProject(CreateProjectCommand createProjectCommand) {
@@ -33,6 +32,47 @@ public class ProjectsAndGroupsService {
         project.setStartDate(createProjectCommand.getStartDate());
         project.setBudget(createProjectCommand.getBudget());
         projectsRepository.save(project);
+        return modelMapper.map(project,ProjectDto.class);
+    }
+
+    public ResearchGroupDto createResearchGroup(CreateResearchGroupCommand createResearchGroupCommand) {
+        ResearchGroup researchGroup=new ResearchGroup();
+        researchGroup.setName(createResearchGroupCommand.getName());
+        researchGroup.setFounded(createResearchGroupCommand.getFounded());
+        researchGroup.setCountOfResearchers(createResearchGroupCommand.getCountOfResearchers());
+        researchGroup.setLocation(createResearchGroupCommand.getLocation());
+        researchGroup.setBudget(createResearchGroupCommand.getBudget());
+        researchGroupsRepository.save(researchGroup);
+        return modelMapper.map(researchGroup,ResearchGroupDto.class);
+    }
+
+    private Project findProjectById(long id) {
+        Optional<Project> optionalProject= projectsRepository.findById(id);
+        if(optionalProject.isEmpty()){
+//            throw  new IllegalArgumentException("No car found with id: "+id);
+            throw  new ProjectNotFoundException(id);
+        }
+        return optionalProject.get();
+    }
+
+    private ResearchGroup findResearchGroupById(long id) {
+        Optional<ResearchGroup> optionalResearchGroup= researchGroupsRepository.findById(id);
+        if(optionalResearchGroup.isEmpty()){
+//            throw  new IllegalArgumentException("No car found with id: "+id);
+            throw  new ResearchGroupNotFoundException(id);
+        }
+        return optionalResearchGroup.get();
+    }
+
+
+
+    public ProjectDto addPostedGroupToProject(long id, CreateResearchGroupCommand createResearchGroupCommand) {
+        ResearchGroup researchGroup=modelMapper.map(createResearchGroupCommand,ResearchGroup.class);
+        Project project=findProjectById(id);
+        project.addGroup(researchGroup);
+        researchGroupsRepository.save(researchGroup);
+        projectsRepository.save(project);
+
         return modelMapper.map(project,ProjectDto.class);
     }
 

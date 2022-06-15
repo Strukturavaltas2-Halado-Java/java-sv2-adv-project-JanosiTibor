@@ -16,10 +16,12 @@ CREATE TABLE projects
 
 CREATE TABLE research_groups
 (
-    id                 BIGINT AUTO_INCREMENT NOT NULL,
-    researchgroup_name VARCHAR(255) NULL,
-    location           VARCHAR(255) NULL,
-    budget             INT NULL,
+    id                   BIGINT AUTO_INCREMENT NOT NULL,
+    researchgroup_name   VARCHAR(255) NULL,
+    founded              date NULL,
+    count_of_researchers INT NULL,
+    location             VARCHAR(255) NULL,
+    budget               INT NULL,
     CONSTRAINT pk_research_groups PRIMARY KEY (id)
 );
 

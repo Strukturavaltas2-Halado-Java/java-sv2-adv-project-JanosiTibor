@@ -31,6 +31,10 @@ public class Project {
             inverseJoinColumns=@JoinColumn(name="researchgroup_ID"))
     private Set<ResearchGroup> researchGroupSet = new HashSet<>();
 
+    public void addGroup(ResearchGroup researchGroup){
+        researchGroupSet.add(researchGroup);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

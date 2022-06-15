@@ -31,6 +31,32 @@ Accept: application/json
 }
 
 ###
+POST http://localhost:8080/api/projects/1/add-group
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Neuroendokrinológia",
+  "founded": "2019-01-11",
+  "countOfResearchers": 15,
+  "location": "ÁOK_RÉGI_ÉPÜLET",
+  "budget": 18000000
+}
+
+###
+POST http://localhost:8080/api/projects/1/add-group
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Nano-Bio Imaging Core Facility",
+  "founded": "2019-07-11",
+  "countOfResearchers": 3,
+  "location": "ÁOK_ÚJ_ÉPÜLET",
+  "budget": 21000000
+}
+
+###
 POST http://localhost:8080/api/cars
 Content-Type: application/json
 Accept: application/json

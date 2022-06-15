@@ -1,11 +1,33 @@
-POST http://localhost:8080/api/car-sellers
+POST http://localhost:8080/api/research-groups
 Content-Type: application/json
+Accept: application/json
 
 {
-  "name": "Stefi"
+  "name": "NAP kutatócsoport",
+  "founded": "2018-09-01",
+  "countOfResearchers": 15,
+  "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
+  "budget": 15000000
 }
 
 ###
+POST http://localhost:8080/api/research-groups
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "FEMTO Lézeres Csoport",
+  "founded": "2018-09-01",
+  "countOfResearchers": 15,
+  "location": "BIOFIZIKA",
+  "budget": 15000000
+}
+
+###
+
+
+
+
 POST http://localhost:8080/api/car-sellers
 Content-Type: application/json
 

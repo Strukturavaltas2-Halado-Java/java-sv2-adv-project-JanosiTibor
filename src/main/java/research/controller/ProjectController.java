@@ -2,6 +2,7 @@ package research.controller;
 
 import research.criteria.CarCriteria;
 import research.dtos.CreateProjectCommand;
+import research.dtos.CreateResearchGroupCommand;
 import research.dtos.ProjectDto;
 import research.service.ProjectsAndGroupsService;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectDto createProject(@Valid @RequestBody CreateProjectCommand createCarCommand){
         return projectsAndGroupsService.createProject(createCarCommand);
+    }
+
+    @PostMapping("/{id}/add-group")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProjectDto addPostedGroupToProject(@PathVariable("id") long id, @Valid @RequestBody CreateResearchGroupCommand createResearchGroupCommand){
+        return projectsAndGroupsService.addPostedGroupToProject(id,createResearchGroupCommand);
     }
 
 //    @GetMapping
