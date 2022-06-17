@@ -1,15 +1,22 @@
 package research.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
-import research.dtos.CreateResearchGroupCommand;
-import research.dtos.ResearchGroupDto;
+import research.criteria.ResearchGroupCriteria;
+import research.dtos.*;
 import research.service.ProjectsAndGroupsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/research-groups")
+@Tag(name="Operations on research groups")
 public class ResearchGroupController {
     private ProjectsAndGroupsService projectsAndGroupsService;
 
@@ -21,6 +28,32 @@ public class ResearchGroupController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResearchGroupDto createResearchGroup(@Valid @RequestBody CreateResearchGroupCommand createResearchGroupCommand){
         return projectsAndGroupsService.createResearchGroup(createResearchGroupCommand);
+    }
+    @GetMapping
+//    public List<ResearchGroupDto> getResearchGroups(@RequestParam(required = false) ResearchGroupCriteria researchGroupCriteria){
+    public List<ResearchGroupDto> getResearchGroups(ResearchGroupCriteria researchGroupCriteria){
+        return  projectsAndGroupsService.getResearchGroups(researchGroupCriteria);
+    }
+
+    @Operation(summary = "Update research group by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Research group has been updated"),
+            @ApiResponse(responseCode = "404", description = "No research group found with this ID")
+    })
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/update/{id}")
+    public ResearchGroupDto updateResearchGroupById(@PathVariable("id") @Parameter(name = "id", description = "Research group ID to update", example = "2") long id, @RequestBody UpdateResearchGroupCommand updateResearchGroupCommand){
+        return projectsAndGroupsService.updateResearchGroupById(id, updateResearchGroupCommand);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteResearchGroup(@PathVariable("id") @Parameter(name = "id", description = "Research group ID to delete", example = "2") long id){
+        projectsAndGroupsService.deleteResearchGroup(id);
+    }
+    @GetMapping("/{id}")
+    public ResearchGroupDto getResearchGroupById(@PathVariable("id") long id){
+        return projectsAndGroupsService.getResearchGroupById(id);
     }
 //
 //    @PostMapping("/{id}/cars")

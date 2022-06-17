@@ -24,7 +24,33 @@ Accept: application/json
 }
 
 ###
+GET http://localhost:8080/api/research-groups
+Content-Type: application/json
 
+###
+GET http://localhost:8080/api/research-groups?nameLike=ma
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/research-groups?nameLike=ma&minCountOfResearchers=4
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/research-groups?minBudget=15000000
+Content-Type: application/json
+
+###
+DELETE http://localhost:8080/api/research-groups/delete/4
+Content-Type: application/json
+Accept: application/json
+
+
+###
+
+GET http://localhost:8080/api/research-groups/5
+Content-Type: application/json
+
+###
 
 
 

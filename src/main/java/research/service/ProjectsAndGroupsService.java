@@ -1,9 +1,9 @@
 package research.service;
 
-import research.dtos.CreateProjectCommand;
-import research.dtos.CreateResearchGroupCommand;
-import research.dtos.ProjectDto;
-import research.dtos.ResearchGroupDto;
+import org.modelmapper.TypeToken;
+import org.springframework.transaction.annotation.Transactional;
+import research.criteria.ResearchGroupCriteria;
+import research.dtos.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import research.exceptions.ProjectNotFoundException;
@@ -12,13 +12,19 @@ import research.model.Project;
 import research.model.ResearchGroup;
 import research.repository.ResearchGroupsRepository;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
+@Transactional
 @Service
 public class ProjectsAndGroupsService {
     private ModelMapper modelMapper;
     private research.repository.ProjectsRepository projectsRepository;
     private ResearchGroupsRepository researchGroupsRepository;
+
+    private Type projectDtoListType=new TypeToken<List<ProjectDto>>(){}.getType();
+    private Type researchGroupDtoListType=new TypeToken<List<ResearchGroupDto>>(){}.getType();
+
 
     public ProjectsAndGroupsService(ModelMapper modelMapper, research.repository.ProjectsRepository projectsRepository, ResearchGroupsRepository researchGroupsRepository) {
         this.modelMapper = modelMapper;
@@ -71,10 +77,87 @@ public class ProjectsAndGroupsService {
         Project project=findProjectById(id);
         project.addGroup(researchGroup);
         researchGroupsRepository.save(researchGroup);
-        projectsRepository.save(project);
+//        projectsRepository.save(project);
 
         return modelMapper.map(project,ProjectDto.class);
     }
+
+    public ProjectDto addGroupToProject(long projectId, long groupId) {
+        ResearchGroup researchGroup=findResearchGroupById(groupId);
+        Project project=findProjectById(projectId);
+        project.addGroup(researchGroup);
+//        projectsRepository.save(project);
+
+        return modelMapper.map(project,ProjectDto.class);
+    }
+
+    public void deleteResearchGroup(long id) {
+        ResearchGroup researchGroup=findResearchGroupById(id);
+        findProjectsByParticipatingGroup(researchGroup).forEach( project -> project.removeGroup(researchGroup));
+        researchGroupsRepository.deleteById(id);
+    }
+    public List<Project> findProjectsByParticipatingGroup(ResearchGroup researchGroup){
+        List<Project> filteredProjectList=projectsRepository.findProjectsByParticipatingGroup(researchGroup);
+        return filteredProjectList;
+    }
+    public List<Project> findProjectDtosByParticipatingGroup(ResearchGroup researchGroup){
+        return modelMapper.map(findProjectsByParticipatingGroup(researchGroup),projectDtoListType);
+    }
+
+    public void deleteProject(long id) {
+        Project project=findProjectById(id);
+        projectsRepository.delete(project);
+    }
+
+    public ProjectDto getProjectById(long id) {
+        Project project=findProjectById(id);
+        return modelMapper.map(project,ProjectDto.class);
+    }
+
+    public ResearchGroupDto getResearchGroupById(long id) {
+        ResearchGroup researchGroup=findResearchGroupById(id);
+        return modelMapper.map(researchGroup,ResearchGroupDto.class);
+    }
+
+    public ProjectDto updateProject(long id, UpdateProjectCommand updateProjectCommand) {
+        Project project=findProjectById(id);
+        if(updateProjectCommand.getName()!=null){
+            project.setName(updateProjectCommand.getName());
+        }
+        if(updateProjectCommand.getStartDate()!=null){
+            project.setStartDate(updateProjectCommand.getStartDate());
+        }
+        if(updateProjectCommand.getBudget()!=null){
+            project.setBudget(updateProjectCommand.getBudget());
+        }
+        return modelMapper.map(project,ProjectDto.class);
+    }
+
+    public ResearchGroupDto updateResearchGroupById(long id, UpdateResearchGroupCommand updateResearchGroupCommand) {
+        ResearchGroup researchGroup=findResearchGroupById(id);
+        if(updateResearchGroupCommand.getName()!=null){
+            researchGroup.setName(updateResearchGroupCommand.getName());
+        }
+        if(updateResearchGroupCommand.getFounded()!=null){
+            researchGroup.setFounded(updateResearchGroupCommand.getFounded());
+        }
+        if(updateResearchGroupCommand.getCountOfResearchers()!=null){
+            researchGroup.setCountOfResearchers(updateResearchGroupCommand.getCountOfResearchers());
+        }
+        if(updateResearchGroupCommand.getLocation()!=null){
+            researchGroup.setLocation(updateResearchGroupCommand.getLocation());
+        }
+        if(updateResearchGroupCommand.getBudget()!=null){
+            researchGroup.setBudget(updateResearchGroupCommand.getBudget());
+        }
+        return modelMapper.map(researchGroup,ResearchGroupDto.class);
+    }
+
+    public List<ResearchGroupDto> getResearchGroups(ResearchGroupCriteria researchGroupCriteria) {
+        List<ResearchGroup> result = researchGroupsRepository.findAllByCriteria(researchGroupCriteria.getNameLike(),researchGroupCriteria.getMinCountOfResearchers(),researchGroupCriteria.getMinBudget());
+        return modelMapper.map(result,researchGroupDtoListType);
+    }
+
 
 //    public List<CarDTO> getCars(CarCriteria carCriteria) {
 //        List<Car> filteredCarList=new ArrayList<>();

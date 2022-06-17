@@ -1,9 +1,14 @@
 package research.controller;
 
-import research.criteria.CarCriteria;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import research.dtos.CreateProjectCommand;
 import research.dtos.CreateResearchGroupCommand;
 import research.dtos.ProjectDto;
+import research.dtos.UpdateProjectCommand;
 import research.service.ProjectsAndGroupsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
+@Tag(name="Operations on projects")
 public class ProjectController {
     private ProjectsAndGroupsService projectsAndGroupsService;
 
@@ -30,6 +36,34 @@ public class ProjectController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProjectDto addPostedGroupToProject(@PathVariable("id") long id, @Valid @RequestBody CreateResearchGroupCommand createResearchGroupCommand){
         return projectsAndGroupsService.addPostedGroupToProject(id,createResearchGroupCommand);
+    }
+
+//    @Operation(summary = "Find Location which contains ")
+//    @ApiResponse(responseCode = "200", description = "Location has been found")
+    @GetMapping("/{id}/add-group")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponse(responseCode = "200", description = "Location has been found")
+    public ProjectDto addGroupToProject(@PathVariable("id") long projectId, @RequestParam  @Parameter(name = "groupId", description = "ID of the group", example = "1") long groupId){
+        return projectsAndGroupsService.addGroupToProject(projectId,groupId);
+    }
+    @GetMapping("/{id}")
+    public ProjectDto getProjectById( @PathVariable("id") long projectId){
+        return projectsAndGroupsService.getProjectById(projectId);
+    }
+    @Operation(summary = "Update Project By ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project has been found"),
+            @ApiResponse(responseCode = "404", description = "No project found with this ID")
+    })
+    @PutMapping("/update/{id}")
+    public ProjectDto updateProject(@PathVariable("id") @Parameter(name = "id", description = "Project ID to update", example = "2") long id, @RequestBody UpdateProjectCommand updateProjectCommand){
+        return projectsAndGroupsService.updateProject(id, updateProjectCommand);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProject(@PathVariable("id") @Parameter(name = "id", description = "Project ID to delete", example = "2") long id){
+        projectsAndGroupsService.deleteProject(id);
     }
 
 //    @GetMapping

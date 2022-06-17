@@ -14,6 +14,17 @@ Content-Type: application/json
 Accept: application/json
 
 {
+  "name": "E2 gyors hatásai",
+  "startDate": "2019-01-01",
+  "budget": 45000000
+}
+
+###
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
   "name": "Ampa receptor",
   "startDate": "2022-08-31",
   "budget": 5000000
@@ -31,7 +42,45 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/1/add-group
+PUT http://localhost:8080/api/projects/update/4
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Covid-19",
+  "startDate": "2022-07-01",
+  "budget": 95000000
+}
+
+###
+PUT http://localhost:8080/api/projects/update/4
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Covid-2022"
+}
+
+###
+PUT http://localhost:8080/api/projects/update/4
+Content-Type: application/json
+Accept: application/json
+
+{
+  "startDate": "2022-07-15"
+}
+
+###
+PUT http://localhost:8080/api/projects/update/4
+Content-Type: application/json
+Accept: application/json
+
+{
+  "budget": 295000000
+}
+
+###
+POST http://localhost:8080/api/projects/3/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -44,7 +93,20 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/1/add-group
+POST http://localhost:8080/api/projects/3/add-group
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Farmakológia",
+  "founded": "2017-01-01",
+  "countOfResearchers": 34,
+  "location": "ÁOK_RÉGI_ÉPÜLET",
+  "budget": 1800000
+}
+
+###
+POST http://localhost:8080/api/projects/11/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -55,6 +117,27 @@ Accept: application/json
   "location": "ÁOK_ÚJ_ÉPÜLET",
   "budget": 21000000
 }
+
+###
+GET http://localhost:8080/api/projects/3/add-group?groupId=12
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects/5/add-group?groupId=5
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects/3/add-group?groupId=5
+Content-Type: application/json
+
+###
+DELETE http://localhost:8080/api/projects/delete/1
+Content-Type: application/json
+Accept: application/json###
+###
+
+GET http://localhost:8080/api/projects/3
+Content-Type: application/json
 
 ###
 POST http://localhost:8080/api/cars

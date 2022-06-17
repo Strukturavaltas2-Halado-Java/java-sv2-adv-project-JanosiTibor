@@ -34,6 +34,9 @@ public class Project {
     public void addGroup(ResearchGroup researchGroup){
         researchGroupSet.add(researchGroup);
     }
+    public void removeGroup(ResearchGroup researchGroup){
+        researchGroupSet.remove(researchGroup);
+    }
 
     @Override
     public boolean equals(Object o) {
