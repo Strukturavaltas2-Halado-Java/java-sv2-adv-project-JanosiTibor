@@ -23,15 +23,15 @@ public class Validation {
         return projectToValidate;
     }
 
-    private boolean checkNotBlankString(String s){
+    public boolean checkNotBlankString(String s){
         return s != null && !s.isBlank();
     }
 
-    private boolean checkDate(LocalDate actual, LocalDate start, LocalDate end){
+    public boolean checkDate(LocalDate actual, LocalDate start, LocalDate end){
         return actual.isAfter(start) && actual.isBefore(end);
     }
 
-    private boolean checkNotNegativeInteger(int i){
+    public boolean checkNotNegativeInteger(int i){
         return i>=0;
     }
 
@@ -42,21 +42,13 @@ public class Validation {
                 && checkNotNegativeInteger(researchGroupToValidate.getBudget())
                 && checkValidLocation(researchGroupToValidate.getLocation());
 
-
-//        private String name;
-//
-//        private LocalDate founded;
-//        private int countOfResearchers;
-//        @Enumerated(EnumType.STRING)
-//        private Location location;
-//        private int budget;
         if (!isValid) {
             throw new researchGroupNotValidException(researchGroupToValidate);
         }
         return researchGroupToValidate;
     }
 
-    private boolean checkValidLocation(Location location) {
+    public boolean checkValidLocation(Location location) {
         for (Location validLocation : Location.values()) {
                 if (validLocation==location) {
                     return true;

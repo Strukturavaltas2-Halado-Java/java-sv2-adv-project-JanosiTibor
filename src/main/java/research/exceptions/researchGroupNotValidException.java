@@ -12,6 +12,6 @@ public class researchGroupNotValidException extends AbstractThrowableProblem {
         super(URI.create("research-groups/not-valid"),
                 "Not Valid",
                 Status.BAD_REQUEST,
-               String.format("ResearchGroup (name:%s, founded:%s, countOfResearchers:%d, budget:%d, location:%s) not valid", researchGroup.getName(),researchGroup.getFounded(),researchGroup.getCountOfResearchers(),researchGroup.getBudget(),researchGroup.getLocation()));
+               String.format("ResearchGroup (name:%s, founded:%s, countOfResearchers:%d, budget:%d, location:%s) not valid.", researchGroup.getName(),researchGroup.getFounded(),researchGroup.getCountOfResearchers(),researchGroup.getBudget(),researchGroup.getLocation()));
     }
 }

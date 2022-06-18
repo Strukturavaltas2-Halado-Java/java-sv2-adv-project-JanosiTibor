@@ -16,6 +16,7 @@ import research.repository.ResearchGroupsRepository;
 
 import javax.persistence.OrderBy;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -138,12 +139,21 @@ public class ProjectsAndGroupsService {
     public ProjectDto updateProject(long id, UpdateProjectCommand updateProjectCommand) {
         Project project=findProjectById(id);
         if(updateProjectCommand.getName()!=null){
+            if(!validation.checkNotBlankString(updateProjectCommand.getName())){
+                throw new IllegalArgumentException("Name musn't be blank!");
+            }
             project.setName(updateProjectCommand.getName());
         }
         if(updateProjectCommand.getStartDate()!=null){
+            if(!validation.checkDate(updateProjectCommand.getStartDate(),Project.FIRST_DATE.minusDays(1),Project.LAST_DATE.plusDays(1))){
+                throw new IllegalArgumentException("Not a valid date!");
+            }
             project.setStartDate(updateProjectCommand.getStartDate());
         }
         if(updateProjectCommand.getBudget()!=null){
+            if(!validation.checkNotNegativeInteger(updateProjectCommand.getBudget())){
+                throw new IllegalArgumentException("Budget musn't be negative!");
+            }
             project.setBudget(updateProjectCommand.getBudget());
         }
         return modelMapper.map(project,ProjectDto.class);
@@ -152,18 +162,33 @@ public class ProjectsAndGroupsService {
     public ResearchGroupDto updateResearchGroupById(long id, UpdateResearchGroupCommand updateResearchGroupCommand) {
         ResearchGroup researchGroup=findResearchGroupById(id);
         if(updateResearchGroupCommand.getName()!=null){
+            if(!validation.checkNotBlankString(updateResearchGroupCommand.getName())){
+                throw new IllegalArgumentException("Name musn't be blank!");
+            }
             researchGroup.setName(updateResearchGroupCommand.getName());
         }
         if(updateResearchGroupCommand.getFounded()!=null){
+            if(!validation.checkDate(updateResearchGroupCommand.getFounded(),Project.FIRST_DATE.minusDays(1), LocalDate.now().plusDays(1))){
+                throw new IllegalArgumentException("Not a valid date!");
+            }
             researchGroup.setFounded(updateResearchGroupCommand.getFounded());
         }
         if(updateResearchGroupCommand.getCountOfResearchers()!=null){
+            if(!validation.checkNotNegativeInteger(updateResearchGroupCommand.getCountOfResearchers())){
+                throw new IllegalArgumentException("Number of researcher musn't be negative!");
+            }
             researchGroup.setCountOfResearchers(updateResearchGroupCommand.getCountOfResearchers());
         }
         if(updateResearchGroupCommand.getLocation()!=null){
+            if(!validation.checkValidLocation(updateResearchGroupCommand.getLocation())){
+                throw new IllegalArgumentException("Location is not valid!");
+            }
             researchGroup.setLocation(updateResearchGroupCommand.getLocation());
         }
         if(updateResearchGroupCommand.getBudget()!=null){
+            if(!validation.checkNotNegativeInteger(updateResearchGroupCommand.getBudget())){
+                throw new IllegalArgumentException("Budget musn't be negative!");
+            }
             researchGroup.setBudget(updateResearchGroupCommand.getBudget());
         }
         return modelMapper.map(researchGroup,ResearchGroupDto.class);
@@ -273,5 +298,14 @@ public class ProjectsAndGroupsService {
         return  projectList.stream()
                 .sorted(Comparator.comparing(Project::getBudget))
                 .collect(Collectors.toList());
+    }
+
+    public ProjectDto deleteGroupFromProject(long projectId, long groupId) {
+        ResearchGroup researchGroup=findResearchGroupById(groupId);
+        Project project=findProjectById(projectId);
+        project.removeGroup(researchGroup);
+//        projectsRepository.save(project);
+
+        return modelMapper.map(project,ProjectDto.class);
     }
 }

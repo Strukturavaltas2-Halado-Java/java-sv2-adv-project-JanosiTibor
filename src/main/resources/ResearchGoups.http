@@ -3,10 +3,24 @@ Content-Type: application/json
 Accept: application/json
 
 {
+  "name": "",
+  "founded": "2018-09-01",
+  "countOfResearchers": 15,
+  "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
+  "budget": 5
+}
+
+###
+
+POST http://localhost:8080/api/research-groups
+Content-Type: application/json
+Accept: application/json
+
+{
   "name": "NAP kutatócsoport",
   "founded": "2018-09-01",
   "countOfResearchers": 15,
-  "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
+  "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
   "budget": 5
 }
 
@@ -16,8 +30,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "FEMTO Lézeres Csoport",
-  "founded": "2018-09-01",
+  "name": "FEMTO-Lézeres Csoport",
+  "founded": "2016-09-01",
   "countOfResearchers": 15,
   "location": "BIOFIZIKA",
   "budget": 15
@@ -81,72 +95,65 @@ Accept: application/json
 
 ###
 
-GET http://localhost:8080/api/research-groups/5
+GET http://localhost:8080/api/research-groups/11
 Content-Type: application/json
 
 ###
-
-
-
-POST http://localhost:8080/api/car-sellers
-Content-Type: application/json
-
-{
-  "name": "Józsi"
-}
-
-###
-
-POST http://localhost:8080/api/car-sellers
-Content-Type: application/json
-
-{
-  "name": "BuliBáró"
-}
-
-###
-
-POST http://localhost:8080/api/car-sellers/1/cars
+PUT http://localhost:8080/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
 {
-  "brand": "Kia",
-  "type": "Cedd",
-  "age": 16,
-  "condition": "EXCELLENT",
-  "kmCounter": 169000
+  "name": "Szövettani Mikroszkópia",
+  "founded": "2020-12-31",
+  "countOfResearchers": 10,
+  "location": "BIOFIZIKA",
+  "budget": 11
 }
 
 ###
-
-POST http://localhost:8080/api/car-sellers/2/cars
+PUT http://localhost:8080/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
 {
-  "brand": "BMW",
-  "type": "x5",
-  "age": 19,
-  "condition": "NORMAL",
-  "kmCounter": 50000
+  "name": "Sejtes Mikroszkópia"
 }
+
 ###
-POST http://localhost:8080/api/car-sellers/3/cars
+PUT http://localhost:8080/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
 {
-"brand": "Trabant",
-"type": "601",
-"age": 46,
-"condition": "EXCELLENT",
-"kmCounter": 109000
+  "founded": "2019-12-01"
 }
 
 ###
-DELETE http://localhost:8080/api/car-sellers/2
+PUT http://localhost:8080/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
+
+{
+  "countOfResearchers": 9
+}
+
+###
+PUT http://localhost:8080/api/research-groups/update/11
+Content-Type: application/json
+Accept: application/json
+
+{
+  "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT"
+}
+
+###
+PUT http://localhost:8080/api/research-groups/update/11
+Content-Type: application/json
+Accept: application/json
+
+{
+  "budget": 12
+}
 
 ###

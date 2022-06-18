@@ -1,26 +1,14 @@
 package research;
 
-import research.service.ProjectsAndGroupsService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.reactive.server.EntityExchangeResult;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(statements = {"DELETE FROM car_kilometer_state_list","DELETE FROM cars", "DELETE FROM car_sellers"})
-class ProjectControllerWebClientIT {
+class ProjectControllerWebClientITTest {
 //    @Autowired
 //    WebTestClient webTestClient;
 //
