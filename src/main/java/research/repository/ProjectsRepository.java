@@ -21,6 +21,8 @@ public interface ProjectsRepository extends JpaRepository<Project,Long> {
     @Query("select  p from Project p where (:nameLike ='' or p.name like %:nameLike%) and (p.startDate<=:startBefore) and (p.startDate>=:startAfter) and (:minBudget is null or p.budget>=:minBudget)")
     List<Project> findAllByCriteria(@Param("nameLike") String nameLike, @Param("startBefore") LocalDate startBefore, @Param("startAfter") LocalDate startAfter, @Param("minBudget") int minBudget);
 
+    Project findByNameIgnoreCase(String name);
+
 //    @Query("select  rg from ResearchGroup rg where (:nameLike ='' or rg.name like %:nameLike%) and (:minCountOfResearchers is null or rg.countOfResearchers>=:minCountOfResearchers) and (:minBudget is null or rg.budget>=:minBudget)")
 //    List<ResearchGroup> findAllByCriteria(@Param("nameLike") String nameLike, @Param("minCountOfResearchers") Integer minCountOfResearchers, @Param("minBudget") Integer minBudget);
 

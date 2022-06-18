@@ -18,6 +18,9 @@ import java.util.Set;
 @Entity
 @Table(name="projects")
 public class Project {
+    public static final LocalDate FIRST_DATE=LocalDate.of(1899, 12, 31);
+    public static final LocalDate LAST_DATE=LocalDate.of(2100, 12, 31);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,6 +40,7 @@ public class Project {
     public void removeGroup(ResearchGroup researchGroup){
         researchGroupSet.remove(researchGroup);
     }
+
 
     @Override
     public boolean equals(Object o) {

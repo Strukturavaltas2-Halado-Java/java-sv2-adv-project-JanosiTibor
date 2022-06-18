@@ -6,6 +6,7 @@ import research.criteria.*;
 import research.dtos.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import research.exceptions.ProjectAlreadyExistsException;
 import research.exceptions.ProjectNotFoundException;
 import research.exceptions.ResearchGroupAlreadyExistsException;
 import research.exceptions.ResearchGroupNotFoundException;
@@ -25,6 +26,8 @@ public class ProjectsAndGroupsService {
     private research.repository.ProjectsRepository projectsRepository;
     private ResearchGroupsRepository researchGroupsRepository;
 
+    private Validation validation=new Validation();
+
     private Type projectDtoListType=new TypeToken<List<ProjectDto>>(){}.getType();
     private Type researchGroupDtoListType=new TypeToken<List<ResearchGroupDto>>(){}.getType();
 
@@ -37,23 +40,32 @@ public class ProjectsAndGroupsService {
 
     public ProjectDto createProject(CreateProjectCommand createProjectCommand) {
         Project project=modelMapper.map(createProjectCommand,Project.class);
-        projectsRepository.save(project);
-        return modelMapper.map(project,ProjectDto.class);
+        Project validProject=validation.validProject(project);
+        isSavedProject(validProject);
+        projectsRepository.save(validProject);
+        return modelMapper.map(validProject,ProjectDto.class);
+    }
+
+    private void isSavedProject(Project project) {
+        Project result =projectsRepository.findByNameIgnoreCase(project.getName());
+        if(result!=null){
+            throw new ProjectAlreadyExistsException(project,result.getId());
+        }
     }
 
     public ResearchGroupDto createResearchGroup(CreateResearchGroupCommand createResearchGroupCommand) {
         ResearchGroup researchGroup=modelMapper.map(createResearchGroupCommand,ResearchGroup.class);
-        long isSavedResearchGroup=isSavedResearchGroup(researchGroup);
-        if(isSavedResearchGroup>-1L){
-            throw new ResearchGroupAlreadyExistsException(researchGroup,isSavedResearchGroup);
-        }
+        ResearchGroup validResearchGroup=validation.validResearchGroup(researchGroup);
+        isSavedResearchGroup(researchGroup);
         researchGroupsRepository.save(researchGroup);
         return modelMapper.map(researchGroup,ResearchGroupDto.class);
     }
 
-    private long isSavedResearchGroup(ResearchGroup researchGroup) {
+    private void isSavedResearchGroup(ResearchGroup researchGroup) {
         ResearchGroup result =researchGroupsRepository.findByNameIgnoreCaseAndLocation(researchGroup.getName(),researchGroup.getLocation());
-        return (result!=null?result.getId():-1L);
+        if(result!=null){
+            throw new ResearchGroupAlreadyExistsException(researchGroup,result.getId());
+        }
     }
 
     private Project findProjectById(long id) {

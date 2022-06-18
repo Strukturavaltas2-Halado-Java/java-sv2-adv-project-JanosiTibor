@@ -42,10 +42,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Szövettani mikroszkópia",
+  "name": "SzövettaniMikroszkópia",
   "founded": "2021-12-31",
   "countOfResearchers": 5,
-  "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
+  "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
   "budget": 3
 }
 

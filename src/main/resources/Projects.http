@@ -14,9 +14,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "2022 Covid",
-  "startDate": "2022-01-01",
-  "budget": 45
+  "name": "2021Covid",
+  "startDate": "2021-01-01",
+  "budget": 154
 }
 
 ###
