@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import research.dtos.CreateProjectCommand;
-import research.dtos.CreateResearchGroupCommand;
-import research.dtos.ProjectDto;
-import research.dtos.UpdateProjectCommand;
+import research.criteria.ProjectCriteria;
+import research.criteria.ResearchGroupCriteria;
+import research.dtos.*;
 import research.service.ProjectsAndGroupsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +30,14 @@ public class ProjectController {
     public ProjectDto createProject(@Valid @RequestBody CreateProjectCommand createCarCommand){
         return projectsAndGroupsService.createProject(createCarCommand);
     }
+    @GetMapping
+    public List<ProjectDto> getProjects(ProjectCriteria projectCriteria){
+        return  projectsAndGroupsService.getProjects(projectCriteria);
+    }
+    @GetMapping("/{id}")
+    public ProjectDto getProjectById( @PathVariable("id") long projectId){
+        return projectsAndGroupsService.getProjectById(projectId);
+    }
 
     @PostMapping("/{id}/add-group")
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,10 +53,7 @@ public class ProjectController {
     public ProjectDto addGroupToProject(@PathVariable("id") long projectId, @RequestParam  @Parameter(name = "groupId", description = "ID of the group", example = "1") long groupId){
         return projectsAndGroupsService.addGroupToProject(projectId,groupId);
     }
-    @GetMapping("/{id}")
-    public ProjectDto getProjectById( @PathVariable("id") long projectId){
-        return projectsAndGroupsService.getProjectById(projectId);
-    }
+
     @Operation(summary = "Update Project By ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Project has been found"),

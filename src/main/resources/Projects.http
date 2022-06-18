@@ -4,8 +4,19 @@ Accept: application/json
 
 {
   "name": "Covid-19",
-  "startDate": "2022-05-23",
-  "budget": 95000000
+  "startDate": "2020-02-23",
+  "budget": 195
+}
+
+###
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "2022 Covid",
+  "startDate": "2022-01-01",
+  "budget": 45
 }
 
 ###
@@ -16,7 +27,7 @@ Accept: application/json
 {
   "name": "E2 gyors hatásai",
   "startDate": "2019-01-01",
-  "budget": 45000000
+  "budget": 45
 }
 
 ###
@@ -27,7 +38,7 @@ Accept: application/json
 {
   "name": "Ampa receptor",
   "startDate": "2022-08-31",
-  "budget": 5000000
+  "budget": 5
 }
 
 ###
@@ -38,8 +49,40 @@ Accept: application/json
 {
   "name": "3D Single Molecule Detection",
   "startDate": "2022-09-01",
-  "budget": 75000000
+  "budget": 75
 }
+
+###
+GET http://localhost:8080/api/projects
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?orderBy=startDate
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?orderBy=startDate&OrderType=desc
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?orderBy=budget
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?nameLike=ec
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?nameLike=ec&minBudget=15000000
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?startBefore=2022-07-30
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/projects?startAfter=2021-07-30&startBefore=2022-07-30
+Content-Type: application/json
 
 ###
 PUT http://localhost:8080/api/projects/update/4

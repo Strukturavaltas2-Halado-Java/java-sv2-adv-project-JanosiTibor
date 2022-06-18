@@ -7,7 +7,7 @@ Accept: application/json
   "founded": "2018-09-01",
   "countOfResearchers": 15,
   "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
-  "budget": 15000000
+  "budget": 5
 }
 
 ###
@@ -20,7 +20,33 @@ Accept: application/json
   "founded": "2018-09-01",
   "countOfResearchers": 15,
   "location": "BIOFIZIKA",
-  "budget": 15000000
+  "budget": 15
+}
+
+###
+POST http://localhost:8080/api/research-groups
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Virológia",
+  "founded": "2016-07-01",
+  "countOfResearchers": 8,
+  "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
+  "budget": 9
+}
+
+###
+POST http://localhost:8080/api/research-groups
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Szövettani mikroszkópia",
+  "founded": "2021-12-31",
+  "countOfResearchers": 5,
+  "location": "SZENTÁGOTHAI_KUTATŐKÖZPONT",
+  "budget": 3
 }
 
 ###
@@ -37,6 +63,14 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/research-groups?minBudget=15000000
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/research-groups?orderBy=budget
+Content-Type: application/json
+
+###
+GET http://localhost:8080/api/research-groups?orderBy=budget&OrderType=desc
 Content-Type: application/json
 
 ###

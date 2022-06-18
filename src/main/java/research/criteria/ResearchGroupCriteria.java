@@ -15,6 +15,6 @@ public class ResearchGroupCriteria {
     private int minCountOfResearchers=0;
     private int minBudget=0;
 
-    private ResearchGroupOrderBy researchGroupOrderBy=ResearchGroupOrderBy.id;
+    private ResearchGroupOrderBy orderBy=ResearchGroupOrderBy.id;
     private OrderType orderType=OrderType.asc;
 }

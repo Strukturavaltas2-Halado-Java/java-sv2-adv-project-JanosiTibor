@@ -2,18 +2,21 @@ package research.service;
 
 import org.modelmapper.TypeToken;
 import org.springframework.transaction.annotation.Transactional;
-import research.criteria.ResearchGroupCriteria;
+import research.criteria.*;
 import research.dtos.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import research.exceptions.ProjectNotFoundException;
+import research.exceptions.ResearchGroupAlreadyExistsException;
 import research.exceptions.ResearchGroupNotFoundException;
 import research.model.Project;
 import research.model.ResearchGroup;
 import research.repository.ResearchGroupsRepository;
 
+import javax.persistence.OrderBy;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -33,23 +36,24 @@ public class ProjectsAndGroupsService {
     }
 
     public ProjectDto createProject(CreateProjectCommand createProjectCommand) {
-        Project project=new Project();
-        project.setName(createProjectCommand.getName());
-        project.setStartDate(createProjectCommand.getStartDate());
-        project.setBudget(createProjectCommand.getBudget());
+        Project project=modelMapper.map(createProjectCommand,Project.class);
         projectsRepository.save(project);
         return modelMapper.map(project,ProjectDto.class);
     }
 
     public ResearchGroupDto createResearchGroup(CreateResearchGroupCommand createResearchGroupCommand) {
-        ResearchGroup researchGroup=new ResearchGroup();
-        researchGroup.setName(createResearchGroupCommand.getName());
-        researchGroup.setFounded(createResearchGroupCommand.getFounded());
-        researchGroup.setCountOfResearchers(createResearchGroupCommand.getCountOfResearchers());
-        researchGroup.setLocation(createResearchGroupCommand.getLocation());
-        researchGroup.setBudget(createResearchGroupCommand.getBudget());
+        ResearchGroup researchGroup=modelMapper.map(createResearchGroupCommand,ResearchGroup.class);
+        long isSavedResearchGroup=isSavedResearchGroup(researchGroup);
+        if(isSavedResearchGroup>-1L){
+            throw new ResearchGroupAlreadyExistsException(researchGroup,isSavedResearchGroup);
+        }
         researchGroupsRepository.save(researchGroup);
         return modelMapper.map(researchGroup,ResearchGroupDto.class);
+    }
+
+    private long isSavedResearchGroup(ResearchGroup researchGroup) {
+        ResearchGroup result =researchGroupsRepository.findByNameIgnoreCaseAndLocation(researchGroup.getName(),researchGroup.getLocation());
+        return (result!=null?result.getId():-1L);
     }
 
     private Project findProjectById(long id) {
@@ -154,121 +158,108 @@ public class ProjectsAndGroupsService {
     }
 
     public List<ResearchGroupDto> getResearchGroups(ResearchGroupCriteria researchGroupCriteria) {
-        List<ResearchGroup> result = researchGroupsRepository.findAllByCriteria(researchGroupCriteria.getNameLike(),researchGroupCriteria.getMinCountOfResearchers(),researchGroupCriteria.getMinBudget());
+        List<ResearchGroup> filtered = researchGroupsRepository.findAllByCriteria(researchGroupCriteria.getNameLike(),researchGroupCriteria.getMinCountOfResearchers(),researchGroupCriteria.getMinBudget());
+        List<ResearchGroup> result=sortResearchGroups(filtered,researchGroupCriteria);
         return modelMapper.map(result,researchGroupDtoListType);
     }
+    private List<ResearchGroup> sortResearchGroups(List<ResearchGroup> researchGroupList,ResearchGroupCriteria researchGroupCriteria){
+        List<ResearchGroup> orderedResearchGroupList;
+        ResearchGroupOrderBy orderBy=researchGroupCriteria.getOrderBy();
+        if(orderBy== ResearchGroupOrderBy.budget){
+            orderedResearchGroupList=researchGroupOrderByBudget(researchGroupList);
+        }
+        else if(orderBy== ResearchGroupOrderBy.countOfResearchers){
+            orderedResearchGroupList=researchGroupOrderByCountOfResearchers(researchGroupList);
+        }
+        else if(orderBy== ResearchGroupOrderBy.founded){
+            orderedResearchGroupList=researchGroupOrderByFounded(researchGroupList);
+        }
+        else if(orderBy== ResearchGroupOrderBy.name){
+            orderedResearchGroupList=researchGroupOrderByName(researchGroupList);
+        }
+        else{
+            orderedResearchGroupList=researchGroupOrderById(researchGroupList);
+        }
 
+        if(researchGroupCriteria.getOrderType()== OrderType.desc){
+            Collections.reverse(orderedResearchGroupList);
+        }
+        return orderedResearchGroupList;
+    }
 
-//    public List<CarDTO> getCars(CarCriteria carCriteria) {
-//        List<Car> filteredCarList=new ArrayList<>();
-//        if(!carCriteria.getBrand().equals("")){
-//            filteredCarList= projectsRepository.findAllByBrandIgnoreCaseAndAgeIsLessThanEqual(carCriteria.getBrand(),carCriteria.getMaxAge());
-//        }
-//        else{
-//            filteredCarList= projectsRepository.findAllByAgeIsLessThanEqual(carCriteria.getMaxAge());
-//        }
-//
-//        return sortedCarStream(filteredCarList,carCriteria).stream()
-//                .map(m->modelMapper.map(m,CarDTO.class))
-//                .collect(Collectors.toList());
-//    }
-//
-//    private List<Car> sortedCarStream(List<Car> filteredCarList, CarCriteria carCriteria) {
-//        List<Car> orderedCarList;
-//        if(carCriteria.getOrderBy()== OrderBy.age) {
-//            orderedCarList=filteredCarList.stream()
-//                    .sorted(Comparator.comparing(Car::getAge))
-//                    .collect(Collectors.toList());
-//        }
-//        else if(carCriteria.getOrderBy()==OrderBy.km) {
-//            orderedCarList=filteredCarList.stream()
-//                    .sorted(Comparator.comparing(car->car.getKilometerStateList().get(car.getKilometerStateList().size()-1).getKmCounter()))
-//                    .collect(Collectors.toList());
-//        }
-//        else{
-//            orderedCarList=filteredCarList.stream()
-//                    .sorted(Comparator.comparing(Car::getId))
-//                    .collect(Collectors.toList());
-//        }
-//        if(carCriteria.getOrderType()== OrderType.desc){
-//            Collections.reverse(orderedCarList);
-//        }
-//        return orderedCarList;
-//    }
-//
-//
-//
-//    public List<String> getBrands() {
-//        return projectsRepository.getAllBrands().stream()
-//                .sorted()
-//                .collect(Collectors.toList());
-//    }
-//
-//    public CarDTO addKilometerStatesToCar(long id, AddKilometerStatesCommand addKilometerStatesCommand) {
-//        Car car=findCarById(id);
-//        if(car.getKilometerStateList().get(car.getKilometerStateList().size()-1).getKmCounter()>addKilometerStatesCommand.getKmCounter()){
-////            throw new IllegalStateException("Not valid km count: "+addKilometerStatesCommand.getKmCounter());
-//            throw new IllegalKmStateException(addKilometerStatesCommand.getKmCounter());
-//        }
-//        car.addKilometerCount(addKilometerStatesCommand.getKmCounter());
-//        projectsRepository.save(car);
-//        return modelMapper.map(car,CarDTO.class);
-//    }
-//
-//    private Car findCarById(long id) {
-//        Optional<Car> car= projectsRepository.findById(id);
-//        if(car.isEmpty()){
-////            throw  new IllegalArgumentException("No car found with id: "+id);
-//            throw  new CarNotFoundException(id);
-//        }
-//        return car.get();
-//    }
-//
-//    public CarDTO getCar(long id) {
-//        Car car=findCarById(id);
-//        return modelMapper.map(car,CarDTO.class);
-//    }
-//
-//    public void deleteCar(long id) {
-//        Car car=findCarById(id);
-//        projectsRepository.delete(car);
-//    }
-//    public void deleteAllCar() {
-//        projectsRepository.deleteAll();
-//    }
-//
-//    public CarSellerDTO createCarSeller(CreateCarSellerCommand createCarSellerCommand) {
-//        CarSeller carSeller=new CarSeller(createCarSellerCommand.getName());
-//        researchGroupRepository.save(carSeller);
-//        return modelMapper.map(carSeller,CarSellerDTO.class);
-//    }
-//    private CarSeller findCarSellerById(long id) {
-//        Optional<CarSeller> carSeller= researchGroupRepository.findById(id);
-//        if(carSeller.isEmpty()){
-////            throw  new IllegalArgumentException("No car found with id: "+id);
-//            throw  new CarSellerNotFoundException(id);
-//        }
-//        return carSeller.get();
-//    }
-//
-////    @Transactional
-//    public CarSellerDTO addCarToSeller(long id, CreateCarCommand createCarCommand) {
-//        CarSeller carSeller=findCarSellerById(id);
-//
-//        Car car = new Car();
-//        car.setBrand(createCarCommand.getBrand());
-//        car.setType(createCarCommand.getType());
-//        car.setAge(createCarCommand.getAge());
-//        car.setCondition(createCarCommand.getCondition());
-//        car.addKilometerCount(createCarCommand.getKmCounter());
-//        car.setSeller(carSeller);
-//        projectsRepository.save(car);
-//
-//        return modelMapper.map(carSeller,CarSellerDTO.class);
-//    }
-//    public void deleteCarSeller(long id) {
-//        CarSeller carSeller=findCarSellerById(id);
-//        researchGroupRepository.delete(carSeller);
-//    }
+    private List<ResearchGroup> researchGroupOrderById(List<ResearchGroup> researchGroupList) {
+        return  researchGroupList.stream()
+                .sorted(Comparator.comparing(ResearchGroup::getId))
+                .collect(Collectors.toList());}
 
+    private List<ResearchGroup> researchGroupOrderByName(List<ResearchGroup> researchGroupList) {
+        return  researchGroupList.stream()
+                .sorted(Comparator.comparing(ResearchGroup::getName))
+                .collect(Collectors.toList());}
+
+    private List<ResearchGroup> researchGroupOrderByFounded(List<ResearchGroup> researchGroupList) {
+        return  researchGroupList.stream()
+                .sorted(Comparator.comparing(ResearchGroup::getFounded))
+                .collect(Collectors.toList());}
+
+    private List<ResearchGroup> researchGroupOrderByCountOfResearchers(List<ResearchGroup> researchGroupList) {
+        return  researchGroupList.stream()
+                .sorted(Comparator.comparing(ResearchGroup::getCountOfResearchers))
+                .collect(Collectors.toList());
+    }
+
+    private List<ResearchGroup> researchGroupOrderByBudget(List<ResearchGroup> researchGroupList) {
+        return  researchGroupList.stream()
+                .sorted(Comparator.comparing(ResearchGroup::getBudget))
+                .collect(Collectors.toList());
+    }
+
+    public List<ProjectDto> getProjects(ProjectCriteria projectCriteria) {
+        List<Project> filtered = projectsRepository.findAllByCriteria(projectCriteria.getNameLike(),projectCriteria.getStartBefore(),projectCriteria.getStartAfter(),projectCriteria.getMinBudget());
+        List<Project> result=sortProjects(filtered,projectCriteria);
+        return modelMapper.map(result,projectDtoListType);
+    }
+
+    private List<Project> sortProjects(List<Project> projectList, ProjectCriteria projectCriteria) {
+        List<Project> orderedProjectList;
+        ProjectOrderBy orderBy=projectCriteria.getOrderBy();
+        if(orderBy== ProjectOrderBy.budget){
+            orderedProjectList=projectOrderByBudget(projectList);
+        }
+        else if(orderBy== ProjectOrderBy.startDate){
+            orderedProjectList=projectOrderByStartDate(projectList);
+        }
+        else if(orderBy== ProjectOrderBy.name){
+            orderedProjectList=projectOrderByName(projectList);
+        }
+        else{
+            orderedProjectList=projectOrderById(projectList);
+        }
+
+        if(projectCriteria.getOrderType()== OrderType.desc){
+            Collections.reverse(orderedProjectList);
+        }
+        return orderedProjectList;
+    }
+
+    private List<Project> projectOrderById(List<Project> projectList) {
+        return  projectList.stream()
+                .sorted(Comparator.comparing(Project::getId))
+                .collect(Collectors.toList());}
+
+    private List<Project> projectOrderByName(List<Project> projectList) {
+        return  projectList.stream()
+                .sorted(Comparator.comparing(Project::getName))
+                .collect(Collectors.toList());}
+
+    private List<Project> projectOrderByStartDate(List<Project> projectList) {
+        return  projectList.stream()
+                .sorted(Comparator.comparing(Project::getStartDate))
+                .collect(Collectors.toList());}
+
+    private List<Project> projectOrderByBudget(List<Project> projectList) {
+        return  projectList.stream()
+                .sorted(Comparator.comparing(Project::getBudget))
+                .collect(Collectors.toList());
+    }
 }
