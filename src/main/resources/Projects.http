@@ -77,7 +77,7 @@ GET http://localhost:8080/api/projects?nameLike=ec&minBudget=15000000
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?startBefore=2022-07-30
+GET http://localhost:8080/api/projects?startBefore=2022-07-30&minBudget=15000000
 Content-Type: application/json
 
 ###
@@ -131,6 +131,19 @@ Accept: application/json
   "name": "Neuroendokrinológia",
   "founded": "2019-01-11",
   "countOfResearchers": 15,
+  "location": "ÁOK_RÉGI_ÉPÜLET",
+  "budget": 18000000
+}
+
+###
+POST http://localhost:8080/api/projects/3/add-group
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Neuroendokrinológia",
+  "founded": "2019-01-11",
+  "countOfResearchers": -15,
   "location": "ÁOK_RÉGI_ÉPÜLET",
   "budget": 18000000
 }

@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(statements = {"DELETE FROM project_researchgroup","DELETE FROM research_groups", "DELETE FROM projects"})
+@Sql(statements = {"DELETE FROM research_groups"})
 public class ResearchGroupControllerWebClientIT {
     @Autowired
     WebTestClient webTestClient;
@@ -60,10 +60,6 @@ public class ResearchGroupControllerWebClientIT {
     }
 
     @Test
-    @DisplayName("Run application")
-    void testEmpty(){}
-
-    @Test
     @DisplayName("Create a research group")
     void testCreateResearchGroup(){
         ResearchGroupDto created=webTestClient
@@ -85,6 +81,36 @@ public class ResearchGroupControllerWebClientIT {
     }
 
     @Test
+    @DisplayName("Create and read a research group")
+    void testCreateAndReadResearchGroup(){
+        ResearchGroupDto created=webTestClient
+                .post()
+                .uri("/api/research-groups")
+                .bodyValue(new CreateResearchGroupCommand("Virológia",LocalDate.of(2016,7,1),8,Location.SZENTÁGOTHAI_KUTATÓKÖZPONT,55))
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(ResearchGroupDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        ResearchGroupDto result=webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path("/api/research-groups/{id}").build(created.getId()))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ResearchGroupDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(result.getName()).isEqualTo("Virológia");
+        assertThat(result.getFounded()).isEqualTo(LocalDate.of(2016,7,1));
+        assertThat(result.getCountOfResearchers()).isEqualTo(8);
+        assertThat(result.getLocation()).isEqualTo(Location.SZENTÁGOTHAI_KUTATÓKÖZPONT);
+        assertThat(result.getBudget()).isEqualTo(55);
+        assertThat(result.getProjectSet()).hasSize(0);
+    }
+
+    @Test
     @DisplayName("Create a research group with invalid name")
     void testCreateResearchGroupWithInvalidName() {
         ConstraintViolationProblem result=webTestClient
@@ -100,6 +126,24 @@ public class ResearchGroupControllerWebClientIT {
         assertEquals(Status.BAD_REQUEST,result.getStatus());
         assertEquals("name",result.getViolations().get(0).getField());
         assertEquals("The name of the research group mustn't be blank!",result.getViolations().get(0).getMessage());
+    }
+
+    @Test
+    @DisplayName("Create a research group with no founding date")
+    void testCreateResearchGroupWithNoFounded() {
+        ConstraintViolationProblem result=webTestClient
+                .post()
+                .uri("/api/research-groups")
+                .bodyValue(new CreateResearchGroupCommand("Virológia",null,8,Location.SZENTÁGOTHAI_KUTATÓKÖZPONT,55))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(ConstraintViolationProblem.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals(Status.BAD_REQUEST,result.getStatus());
+        assertEquals("founded",result.getViolations().get(0).getField());
+        assertEquals("The research group's date of foundation must be valid!",result.getViolations().get(0).getMessage());
     }
 
     @Test
@@ -143,8 +187,8 @@ public class ResearchGroupControllerWebClientIT {
     }
 
     @Test
-    @DisplayName("Read all research group")
-    void testGetAllResearchGroup(){
+    @DisplayName("Read all research groups")
+    void testGetAllResearchGroups(){
         List<ResearchGroupDto> result=webTestClient
                 .get()
                 .uri("/api/research-groups")
@@ -158,6 +202,48 @@ public class ResearchGroupControllerWebClientIT {
             .contains(new ResearchGroupDto(1L,"Nano-Bio-Imaging Core Facility",LocalDate.of(2019,7,19),3, Location.ÁOK_ÚJ_ÉPÜLET,13,new HashSet<>()))
             .extracting(ResearchGroupDto::getName)
             .containsOnly("NAP kutatócsoport","FEMTO-Lézeres Csoport","Nano-Bio-Imaging Core Facility","Neuroendokrinológia");
+    }
+
+    @Test
+    @DisplayName("Read filtered and sorted research groups (1)")
+    void testFilteredResearchGroups(){
+        List<ResearchGroupDto> result=webTestClient
+                .get()
+                .uri(builder -> builder.path("/api/research-groups")
+                        .queryParam("minCountOfResearchers","4")
+                        .queryParam("minBudget","14")
+                        .queryParam("orderBy","founded")
+                        .queryParam("OrderType","asc")
+                        .build())
+                .exchange()
+                .expectBodyList(ResearchGroupDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(result)
+                .hasSize(2)
+                .extracting(ResearchGroupDto::getName)
+                .containsExactly("FEMTO-Lézeres Csoport","Neuroendokrinológia");
+    }
+@Test
+    @DisplayName("Read filtered and sorted research groups (2)")
+    void testFilteredResearchGroupsV2(){
+        List<ResearchGroupDto> result=webTestClient
+                .get()
+                .uri(builder -> builder.path("/api/research-groups")
+                        .queryParam("minCountOfResearchers","4")
+                        .queryParam("orderBy","id")
+                        .queryParam("OrderType","desc")
+                        .build())
+                .exchange()
+                .expectBodyList(ResearchGroupDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(result)
+                .hasSize(3)
+                .extracting(ResearchGroupDto::getName)
+                .containsExactly("Neuroendokrinológia","FEMTO-Lézeres Csoport","NAP kutatócsoport");
     }
 
     @Test

@@ -54,7 +54,7 @@ public class ProjectsAndGroupsService {
     public ResearchGroupDto createResearchGroup(CreateResearchGroupCommand createResearchGroupCommand) {
         ResearchGroup researchGroup=modelMapper.map(createResearchGroupCommand,ResearchGroup.class);
         ResearchGroup validResearchGroup=validation.validResearchGroup(researchGroup);
-        isSavedResearchGroup(researchGroup);
+        isSavedResearchGroup(validResearchGroup);
         researchGroupsRepository.save(researchGroup);
         return modelMapper.map(researchGroup,ResearchGroupDto.class);
     }
@@ -87,9 +87,12 @@ public class ProjectsAndGroupsService {
     public ProjectDto addPostedGroupToProject(long id, CreateResearchGroupCommand createResearchGroupCommand) {
         ResearchGroup researchGroup=modelMapper.map(createResearchGroupCommand,ResearchGroup.class);
         Project project=findProjectById(id);
+
+        ResearchGroup validResearchGroup=validation.validResearchGroup(researchGroup);
+        isSavedResearchGroup(validResearchGroup);
+
         project.addGroup(researchGroup);
         researchGroupsRepository.save(researchGroup);
-//        projectsRepository.save(project);
 
         return modelMapper.map(project,ProjectDto.class);
     }
