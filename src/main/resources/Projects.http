@@ -3,7 +3,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Covid-19",
+  "name": "Covid191",
   "startDate": "2020-02-23",
   "budget": 195
 }
@@ -141,9 +141,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Neuroendokrinológia",
+  "name": "Neuroendokrinológi",
   "founded": "2019-01-11",
-  "countOfResearchers": -15,
+  "countOfResearchers": 15,
   "location": "ÁOK_RÉGI_ÉPÜLET",
   "budget": 18000000
 }
@@ -175,7 +175,7 @@ Accept: application/json
 }
 
 ###
-GET http://localhost:8080/api/projects/10/add-group?groupId=10
+GET http://localhost:8080/api/projects/12/add-group?groupId=18
 Content-Type: application/json
 
 ###
@@ -190,7 +190,7 @@ GET http://localhost:8080/api/projects/10/delete-group?groupId=12
 Content-Type: application/json
 
 ###
-DELETE http://localhost:8080/api/projects/delete/1
+DELETE http://localhost:8080/api/projects/delete/13
 Content-Type: application/json
 Accept: application/json###
 ###

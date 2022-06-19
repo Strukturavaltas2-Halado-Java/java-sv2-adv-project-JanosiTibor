@@ -1,0 +1,1 @@
+docker run -d -e MYSQL_DATABASE=research -e MYSQL_USER=research -e MYSQL_PASSWORD=research -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -p 3308:3306 --network research-net --name research-net-mariadb mariadb > 02-DockerRun.txt

@@ -5,7 +5,6 @@ import research.exceptions.ResearchGroupNotValidException;
 import research.model.Location;
 import research.model.Project;
 import research.model.ResearchGroup;
-
 import java.time.LocalDate;
 
 public class Validation {

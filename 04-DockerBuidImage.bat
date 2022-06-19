@@ -1,0 +1,1 @@
+docker build -t research . > 04-ApplicationImageBuilt.txt

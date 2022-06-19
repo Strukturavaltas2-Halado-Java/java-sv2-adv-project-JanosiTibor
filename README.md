@@ -1,101 +1,105 @@
-# Vizsgaremek - Jánosi Tibor
+# Vizsgaremek
 
-A feladat egy olyan alkalmazás megvalósítása, mely kutatási projekteket és azokban résztvevő kutatási csoportokat tart nyilván adatbázisban. Az alkalmazás az adatbázis műveletek megvalósításához JPA technológiát használ, Spring Boot keretrendszerben.
+## Feladat ismertetése
 
-## Az alkalmazás
+A választható feladatok közül "kutatások nyilvántartása" című projektet választottam.
+ A megvalósított alkalmazás projektek és kutatócsoportok kapcsolatát kezeli. Azért választottam ezt mert a projektek és a kutatócsoportok közt m-n a természetes kapcsolat ami viszonylag gyakran fordul elő a valóságban is. Emiatt bízom, benne, hogy a feladat elkészítésével élesben előforduló problémákra és feladatokra készülök fel.
 
-Az adatbázisban az alábbi táblák jönnek létre (ezek részletesebben is megtalálhatóak itt lejjebb 
-a szövegben):
+## Felépítés
 
-![tables](images/tables.PNG)
+### ResearchGroup
 
-A `Bird` entitás az adatbázisban a következő táblába képeződik le:
+A `ResearchGroup` entitás a következő attribútumokkal rendelkezik:
 
-![bird table](images/birdtable.PNG)
+* id (Long)
+* name (String, nem Blank)
+* founded (LocalDate, nem null, 1899-12-31 és az aktuális dátum közti értéket vár)
+* countOfResearchers (int, pozitív)
+* location (Location enum típusú)
+* budget (int, nem negatív, pénzügyi keret millió HUF-ban)
+* projectSet (Set, a projektek halmaza amiben részt vesz a csoport)
 
-A `Nest` entitás táblája pedig így néz ki:
+Végpontok: 
 
-![nest table](images/nesttable.PNG)
+| HTTP metódus | Végpont                 			  | Leírás                                                        |
+| ------------ | ------------------------------------ | ------------------------------------------------------------- |
+| POST         | `"/api/research-groups"`        	  | létrehozza a kutatócsoportot                                  |
+| GET          | `"/api/research-groups"`        	  | rendezve adja vissza az összes vagy a szűrt kutatócsoportokat |
+| GET          | `"/api/research-groups/{id}"`   	  | lekérdez egy kutatócsoportot `id` alapján                     |
+| PUT          | `"/api/research-groups/update/{id}"` | frissíti a kutatócsoport adatait                              |
+| DELETE       | `"/api/research-groups/delete/{id}"` | törli a kutatócsoportot                                       |
 
-Hozd létre ezt a két entitás osztályt olyan módon, hogy a forráskódban az attribútumok 
-elnevezése a Java nyelvben szokásos konvencióknak feleljen meg, de az adatbázisban 
-a táblák és az oszlopok elnevezése és tartalma a képeken látható módon jelenjen meg! 
-A két entitás egymással kétirányú egy-több kapcsolatban áll (egy fészekhez több madár 
-is kapcsolódik), állítsd be ezt a kapcsolatot megfelelően!
+Kutatócsoport létrehozásakor ellenőrzi a alkalmazás, hogy az érkező adatok érvényesek-e. Ha ez nem teljesül 400-as Bad Request kóddal tér vissza.
+Ha a kutatócsoport már létezik 409-es Conflict hibaüzenetet ad a alkalmazás.
+ 
+A kutatócsoportok szűréséhez query paraméterek használhatóak.
+Szűrni a következő paraméterek tetszőleges kombinációjával lehet:
+* nameLike (String, részleges egyezés)
+* minCountOfResearchers (int)
+* minBudget (int)
 
-A `Nest` entitásnak három leszármazottja van, melyeknek újabb attribútumokban vannak eltárolva 
-bizonyos méreteik.
+Az eredmények rendezését (`orderBy`) a következő attribútumok alapján
+* id
+* name
+* founded
+* countOfResearchers
+* budget
+növekvő vagy csökkenő sorrendben (`OrderType`) lehet végrehajtani.
 
-A `RoundNest` a következő táblába képeződik le:
+### Project 
 
-![roundnest table](images/roundnesttable.PNG)
+A `Project ` entitás a következő attribútumokkal rendelkezik:
 
-A `SwallowNest` ebbe:
+* id (Long)
+* name (String, nem Blank)
+* startDate (LocalDate, nem null, 1899-12-31 és 2100-12-31 közti értéket vár)
+* budget (int, nem negatív, pénzügyi keret millió HUF-ban)
+* researchGroupSet (Set, a projekben résztvevő csoportok halmaza)
 
-![swallownest table](images/swallownesttable.PNG)
+A `Project` és a `ResearchGroup` entitások között kétirányú, m-n kapcsolat van.
 
-A `NestingBox` pedig az alábbiba:
+Végpontok:
 
-![nestingbox table](images/nestingboxtable.PNG)
+| HTTP metódus | Végpont                 			 | Leírás                                                  |
+| ------------ | ----------------------------------- | ------------------------------------------------------- |
+| POST         | `"/api/projects"`        			 | létrehoz egy projektet                                  |
+| GET          | `"/api/projects"`        			 | rendezve adja vissza az összes vagy a szűrt projekteket |
+| GET          | `"/api/projects/{id}"`   			 | lekérdez egy projektet `id` alapján                     |
+| PUT          | `"/api/projects/update/{id}"`   	 | frissíti a projekt adatait                              |
+| POST         | `"/api/projects/{id}/add-group"`    | új kutatócsoportot add a projekthez                     |
+| GET          | `"/api/projects/{id}/add-group"`    | már létező kutatócsoportot add a projekthez             |
+| GET          | `"/api/projects/{id}/delete-group"` | kutatócsoport eltávolítása a projektből                 |
+| DELETE       | `"/api/projects/delete/{id}"`   	 | törli a projektet                                       |
 
-Hozd létre a leszármazott osztályokat és állítsd be a `Nest` entitáson a megfelelő 
-annotáció használatával, hogy ezek a képeken látható módon kerüljenek be az adatbázisba!
 
-Ezután hozd létre az adatbázis műveletek elvégzéséhez szükséges osztályokat a 
-következő metódusokkal:
+Projekt létrehozásakor ellenőrzi a alkalmazás, hogy az érkező adatok érvényesek-e. Ha ez nem teljesül 400-as Bad Request kóddal tér vissza.
+Ha a projekt már létezik 409-es Conflict hibaüzenetet ad a alkalmazás.
 
-A `BirdDao` osztályban az alábbiak találhatók:
+Kutatócsoport létrehozásakor figyeli, hogy az adatok érvényesek-e, illetve hogy a csoport nem szerepel-e már az adatbázisban.
+ 
+A kutatócsoportokat szűréséhez query paraméterek használhatóak.
+Szűrni a következő paraméterek tetszőleges kombinációjával lehet:
+* nameLike (String, részleges egyezés)
+* startBefore (LocalDate)
+* startAfter (LocalDate)
+* minBudget (int)
 
-* `void saveBird(Bird bird)` - elment egy madarat az adatbázisba.
-* `List<Bird> listBirds()` - kilistázza az adatbázisból az összes madarat 
-* `List<Bird> listBirdsSpeciesGiven(BirdSpecies species)` - kilistázza az adatbázisból a 
-  paraméterként megadott fajtájú madarakat. 
-* `List<Bird> listBirdsWithEggsGiven(int eggs)` - kilistázza az adatbázisból azokat a madarakat, 
-  melyeknek fészkében a paraméterként megadott számú tojás található.
-* `void deleteBird(long id)` - töröl egy madarat az adatbázisból.  
-  
-A `NestDao` osztályban az alábbiak találhatók:
+Az eredmények rendezését (`orderBy`) a következő attribútumok alapján
+* id
+* name
+* startDate
+* budget
+növekvő vagy csökkenő sorrendben (`OrderType`) lehet végrehajtani.
 
-* `void saveNest(Nest nest)` - elment egy fészket az adatbázisba.
-* `Nest findNestById(long id)` - az egyedi azonosítója alapján megkeres egy fészket az adatbázisban.
-* `Nest findNestWithMinBirds()` - megkeresi azt a fészket az adatbázisban, amelyben a 
-  legkevesebb madár található. Figyelj arra, hogy a visszakapott találatban lekérhető legyen a 
-  fészekhez tartozó madarak listája is!
-* `long countNestsWithEggsGiven(int eggs)` - visszaadja azon fészkek számát, melyben a 
-  paraméterként megadott számú tojás található.
-  
-Hozz létre ezenkívül egy `BirdService` osztályt, amely a konstruktorában egy `BirdDao` 
-példányt vár paraméterül! Az osztálynak legyen egy `Map<BirdSpecies, Integer> getBirdStatistics()` 
-metódusa, mely egy adatszerkezetben visszaadja, hogy az egyes fajtájú madarakból hány található 
-az adatbázisban!
+## Technológiai részletek
 
-## Az alkalmazás tesztelése
-
-Az alkalmazás tesztelésére hozz létre három tesztosztályt!
-
-A `BirdDaoTest` négy tesztmetódust tartalmazzon:
-
-* egyet, amelyben az egyszerű mentés utáni listázást teszteled. Itt AssertJ segítségével írd meg az assertet!
-* egyet a `listBirdsSpeciesGiven(BirdSpecies species)` metódus működésének tesztelésére.
-* legyen egy ismétléses teszteset (`@RepeatedTest`) a `listBirdsWithEggsGiven(int eggs)` metódus 
-  tesztelésére, ahol a teszteset különböző értékekkel hívja meg ezt a metódust!
-* végül legyen egy teszteset, melyben egy adatbázisbeli rekord törlését teszteled!  
-  
-A `NestDaoTest` három tesztmetódust tartalmazzon:
-
-* egyet, amelyben az egyszerű mentés után az egyedi azonosító alapján való visszakérést teszteled.
-* egyet a `findNestWithMinBirds()` metódus működésének tesztelésére. Itt a visszakapott fészek madarait 
-  tartalmazó listára írj AssertJ segítségével assertet!
-* végül legyen egy paraméterezett teszteset, amely egy másik metódusban definiált különböző értékekkel 
-  hívja meg a `countNestsWithEggsGiven(int eggs)` metódust!
-  
-A két tesztosztály tesztadatainak az előkészítését egy-egy külön metódusban végezd! Egyedileg is megoldhatod 
-ezt, vagy a fentebb mellékelt adatbázis táblákban találsz erre egy lehetséges példát.
-
-A `BirdServiceTest` osztályban a `BirdService` függőségét a tesztosztály mockolja! Írj egy tesztmetódust a
-`getBirdStatistics()` tesztelésére, melyben megadod, hogy a mockolt objektumot használó metódus 
-milyen értékkel térjen vissza, erre írj egy assertet, valamint ellenőrizz rá arra is, hogy ténylegesen 
-meghívásra került-e a szükséges adatbáziskezelő metódus!
-
-A tesztosztályok és tesztmetódusok elnevezéseit a megfelelő annotációk segítségével add meg, 
-hogy jól olvasható formában kerüljenek kiírásra!
+* Klasszikus háromrétegű alkalmazást valósítottam meg Java Spring backenddel és REST webszolgáltatásokkal amely MariaDB adatbázisban tárolja az adatokat.
+* Az SQL adatbázist kezelő réteget (`Repository`) Spring Data JPA-val valósítottam meg.
+* Az adatbázis inicializálását Flyway script végzi.
+* Az üzleti logika réteg megvalósítása a `...Service` osztály feladata.
+* A REST szolgáltatásokat a Controller réteg kezeli. 
+* A hibákat saját Exception-ök kezelik, valamint a CreateCommand-okban is alkalmazok validációt.
+* Swagger hozza létre az interaktív dokumentációs felületet.
+* WebClient-tel végeztem az integrációs tesztlést, ami a kód sorainak 82%-át lefedi.
+* További manuális tesztelést a *.http fileok tesznek lehetővé
+* Az alkalmazást Docker konténerből futtatom.

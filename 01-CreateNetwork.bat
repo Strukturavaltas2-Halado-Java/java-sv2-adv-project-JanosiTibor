@@ -1,0 +1,1 @@
+docker network create --driver bridge research-net > 01-NetworkCreated.txt

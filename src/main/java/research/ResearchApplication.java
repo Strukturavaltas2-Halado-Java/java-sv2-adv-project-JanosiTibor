@@ -18,6 +18,4 @@ public class ResearchApplication {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper;
     }
-
-
 }

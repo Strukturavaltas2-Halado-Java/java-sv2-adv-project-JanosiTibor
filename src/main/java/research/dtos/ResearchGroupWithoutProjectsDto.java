@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import research.model.Location;
-
 import java.time.LocalDate;
 import java.util.Objects;
 

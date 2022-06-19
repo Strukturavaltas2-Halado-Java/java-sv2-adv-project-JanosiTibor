@@ -2,8 +2,6 @@ package research.exceptions;
 
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
-import research.model.ResearchGroup;
-
 import java.net.URI;
 
 public class ParameterNotValidException extends AbstractThrowableProblem {

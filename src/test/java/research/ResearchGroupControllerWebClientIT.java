@@ -13,7 +13,6 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import research.dtos.*;
 import research.model.Location;
 import research.service.ProjectsAndGroupsService;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -175,13 +174,12 @@ public class ResearchGroupControllerWebClientIT {
                 .uri("/api/research-groups")
                 .bodyValue(new CreateResearchGroupCommand("FEMTO-Lézeres Csoport",LocalDate.of(2016,6,1),7,Location.BIOFIZIKA,15))
                 .exchange()
-                .expectStatus().isBadRequest()
                 .expectBody(Problem.class)
                 .returnResult()
                 .getResponseBody();
 
         assertEquals("Group (name:FEMTO-Lézeres Csoport) already exists with id: "+researchGroupDto.getId(),result.getDetail());
-        assertEquals(Status.BAD_REQUEST,result.getStatus());
+        assertEquals(Status.CONFLICT,result.getStatus());
         assertEquals("Already Exists",result.getTitle());
         assertEquals("research-groups/already-exists",result.getType().getPath());
     }

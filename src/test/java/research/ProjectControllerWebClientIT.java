@@ -13,7 +13,6 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import research.dtos.*;
 import research.model.Location;
 import research.service.ProjectsAndGroupsService;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
@@ -169,13 +168,12 @@ class ProjectControllerWebClientIT {
                 .uri("/api/projects")
                 .bodyValue(new CreateProjectCommand("Covid-19",LocalDate.of(2019,2,23),195))
                 .exchange()
-                .expectStatus().isBadRequest()
                 .expectBody(Problem.class)
                 .returnResult()
                 .getResponseBody();
 
         assertEquals("Project (name:Covid-19) already exists with id: "+projectDto1.getId(),result.getDetail());
-        assertEquals(Status.BAD_REQUEST,result.getStatus());
+        assertEquals(Status.CONFLICT,result.getStatus());
         assertEquals("Already Exists",result.getTitle());
         assertEquals("projects/already-exists",result.getType().getPath());
     }

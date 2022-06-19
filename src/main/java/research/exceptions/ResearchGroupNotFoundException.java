@@ -2,7 +2,6 @@ package research.exceptions;
 
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
-
 import java.net.URI;
 
 public class ResearchGroupNotFoundException extends AbstractThrowableProblem {
