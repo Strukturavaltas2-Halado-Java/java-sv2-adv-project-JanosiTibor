@@ -6,10 +6,7 @@ import research.criteria.*;
 import research.dtos.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import research.exceptions.ProjectAlreadyExistsException;
-import research.exceptions.ProjectNotFoundException;
-import research.exceptions.ResearchGroupAlreadyExistsException;
-import research.exceptions.ResearchGroupNotFoundException;
+import research.exceptions.*;
 import research.model.Project;
 import research.model.ResearchGroup;
 import research.repository.ResearchGroupsRepository;
@@ -72,7 +69,6 @@ public class ProjectsAndGroupsService {
     private Project findProjectById(long id) {
         Optional<Project> optionalProject= projectsRepository.findById(id);
         if(optionalProject.isEmpty()){
-//            throw  new IllegalArgumentException("No car found with id: "+id);
             throw  new ProjectNotFoundException(id);
         }
         return optionalProject.get();
@@ -81,7 +77,6 @@ public class ProjectsAndGroupsService {
     private ResearchGroup findResearchGroupById(long id) {
         Optional<ResearchGroup> optionalResearchGroup= researchGroupsRepository.findById(id);
         if(optionalResearchGroup.isEmpty()){
-//            throw  new IllegalArgumentException("No car found with id: "+id);
             throw  new ResearchGroupNotFoundException(id);
         }
         return optionalResearchGroup.get();
@@ -140,19 +135,19 @@ public class ProjectsAndGroupsService {
         Project project=findProjectById(id);
         if(updateProjectCommand.getName()!=null){
             if(!validation.checkNotBlankString(updateProjectCommand.getName())){
-                throw new IllegalArgumentException("Name musn't be blank!");
+                throw new ParameterNotValidException("Name musn't be blank!");
             }
             project.setName(updateProjectCommand.getName());
         }
         if(updateProjectCommand.getStartDate()!=null){
             if(!validation.checkDate(updateProjectCommand.getStartDate(),Project.FIRST_DATE.minusDays(1),Project.LAST_DATE.plusDays(1))){
-                throw new IllegalArgumentException("Not a valid date!");
+                throw new ParameterNotValidException("Not a valid date!");
             }
             project.setStartDate(updateProjectCommand.getStartDate());
         }
         if(updateProjectCommand.getBudget()!=null){
             if(!validation.checkNotNegativeInteger(updateProjectCommand.getBudget())){
-                throw new IllegalArgumentException("Budget musn't be negative!");
+                throw new ParameterNotValidException("Budget musn't be negative!");
             }
             project.setBudget(updateProjectCommand.getBudget());
         }
@@ -163,31 +158,31 @@ public class ProjectsAndGroupsService {
         ResearchGroup researchGroup=findResearchGroupById(id);
         if(updateResearchGroupCommand.getName()!=null){
             if(!validation.checkNotBlankString(updateResearchGroupCommand.getName())){
-                throw new IllegalArgumentException("Name musn't be blank!");
+                throw new ParameterNotValidException("Name musn't be blank!");
             }
             researchGroup.setName(updateResearchGroupCommand.getName());
         }
         if(updateResearchGroupCommand.getFounded()!=null){
             if(!validation.checkDate(updateResearchGroupCommand.getFounded(),Project.FIRST_DATE.minusDays(1), LocalDate.now().plusDays(1))){
-                throw new IllegalArgumentException("Not a valid date!");
+                throw new ParameterNotValidException("Not a valid date!");
             }
             researchGroup.setFounded(updateResearchGroupCommand.getFounded());
         }
         if(updateResearchGroupCommand.getCountOfResearchers()!=null){
             if(!validation.checkNotNegativeInteger(updateResearchGroupCommand.getCountOfResearchers())){
-                throw new IllegalArgumentException("Number of researcher musn't be negative!");
+                throw new ParameterNotValidException("Number of researcher musn't be negative!");
             }
             researchGroup.setCountOfResearchers(updateResearchGroupCommand.getCountOfResearchers());
         }
         if(updateResearchGroupCommand.getLocation()!=null){
             if(!validation.checkValidLocation(updateResearchGroupCommand.getLocation())){
-                throw new IllegalArgumentException("Location is not valid!");
+                throw new ParameterNotValidException("Location is not valid!");
             }
             researchGroup.setLocation(updateResearchGroupCommand.getLocation());
         }
         if(updateResearchGroupCommand.getBudget()!=null){
             if(!validation.checkNotNegativeInteger(updateResearchGroupCommand.getBudget())){
-                throw new IllegalArgumentException("Budget musn't be negative!");
+                throw new ParameterNotValidException("Budget musn't be negative!");
             }
             researchGroup.setBudget(updateResearchGroupCommand.getBudget());
         }

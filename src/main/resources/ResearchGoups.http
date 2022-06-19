@@ -3,7 +3,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "",
+  "name": "NAP kutatócsoport",
   "founded": "2018-09-01",
   "countOfResearchers": 15,
   "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
@@ -153,7 +153,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "budget": 12
+  "budget": -1
 }
 
 ###

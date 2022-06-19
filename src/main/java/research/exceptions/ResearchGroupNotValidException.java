@@ -2,13 +2,12 @@ package research.exceptions;
 
 import org.zalando.problem.AbstractThrowableProblem;
 import org.zalando.problem.Status;
-import research.model.Project;
 import research.model.ResearchGroup;
 
 import java.net.URI;
 
-public class researchGroupNotValidException extends AbstractThrowableProblem {
-    public researchGroupNotValidException(ResearchGroup researchGroup) {
+public class ResearchGroupNotValidException extends AbstractThrowableProblem {
+    public ResearchGroupNotValidException(ResearchGroup researchGroup) {
         super(URI.create("research-groups/not-valid"),
                 "Not Valid",
                 Status.BAD_REQUEST,

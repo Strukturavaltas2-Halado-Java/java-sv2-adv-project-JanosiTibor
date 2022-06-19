@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(statements = {"DELETE FROM project_researchgroup","DELETE FROM research_groups", "DELETE FROM projects"})
-public class ResearchGroupControllerWebClientITTest {
+public class ResearchGroupControllerWebClientIT {
     @Autowired
     WebTestClient webTestClient;
 
@@ -60,11 +60,11 @@ public class ResearchGroupControllerWebClientITTest {
     }
 
     @Test
-    @DisplayName("Running application")
+    @DisplayName("Run application")
     void testEmpty(){}
 
     @Test
-    @DisplayName("Creating a research group")
+    @DisplayName("Create a research group")
     void testCreateResearchGroup(){
         ResearchGroupDto created=webTestClient
                 .post()
@@ -85,7 +85,7 @@ public class ResearchGroupControllerWebClientITTest {
     }
 
     @Test
-    @DisplayName("Ceating a research group with INVALID name")
+    @DisplayName("Create a research group with invalid name")
     void testCreateResearchGroupWithInvalidName() {
         ConstraintViolationProblem result=webTestClient
                 .post()
@@ -103,7 +103,7 @@ public class ResearchGroupControllerWebClientITTest {
     }
 
     @Test
-    @DisplayName("Ceating a research group with INVALID date")
+    @DisplayName("Create a research group with invalid date")
     void testCreateResearchGroupWithInvalidDate() {
         Problem result=webTestClient
                 .post()
@@ -124,7 +124,26 @@ public class ResearchGroupControllerWebClientITTest {
     }
 
     @Test
-    @DisplayName("Reading all research group")
+    @DisplayName("Create a research group which already exists")
+    void testCreateResearchGroupAlreadyExists() {
+        Problem result=webTestClient
+                .post()
+                .uri("/api/research-groups")
+                .bodyValue(new CreateResearchGroupCommand("FEMTO-Lézeres Csoport",LocalDate.of(2016,6,1),7,Location.BIOFIZIKA,15))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(Problem.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals("Group (name:FEMTO-Lézeres Csoport) already exists with id: "+researchGroupDto.getId(),result.getDetail());
+        assertEquals(Status.BAD_REQUEST,result.getStatus());
+        assertEquals("Already Exists",result.getTitle());
+        assertEquals("research-groups/already-exists",result.getType().getPath());
+    }
+
+    @Test
+    @DisplayName("Read all research group")
     void testGetAllResearchGroup(){
         List<ResearchGroupDto> result=webTestClient
                 .get()
@@ -142,7 +161,7 @@ public class ResearchGroupControllerWebClientITTest {
     }
 
     @Test
-    @DisplayName("Reading a research group by id")
+    @DisplayName("Read a research group by id")
     void testGetResearchGroupById(){
         ResearchGroupDto result=webTestClient
                 .get()
@@ -159,6 +178,24 @@ public class ResearchGroupControllerWebClientITTest {
         assertThat(result.getLocation()).isEqualTo(Location.BIOFIZIKA);
         assertThat(result.getBudget()).isEqualTo(15);
         assertThat(result.getProjectSet()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Read a research group with wrong id")
+    void testReadResearchGroupWithWrongId(){
+        Problem result=webTestClient
+                .get()
+                .uri("/api/research-groups/-1")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(Problem.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals("Research group with id: -1 not found",result.getDetail());
+        assertEquals(Status.NOT_FOUND,result.getStatus());
+        assertEquals("Not found",result.getTitle());
+        assertEquals("research-groups/not-found",result.getType().getPath());
     }
 
     @Test
@@ -188,5 +225,52 @@ public class ResearchGroupControllerWebClientITTest {
         assertThat(result.getLocation()).isEqualTo(Location.BIOFIZIKA);
         assertThat(result.getBudget()).isEqualTo(15);
         assertThat(result.getProjectSet()).hasSize(0);
+    }
+
+    @Test
+    @DisplayName("Update a research group with invalid budget")
+    void testUpdateResearchGroupWithInvalidBudget(){
+        UpdateResearchGroupCommand updateResearchGroupCommand=new UpdateResearchGroupCommand();
+        updateResearchGroupCommand.setBudget(-1);
+
+        Problem result=webTestClient
+                .put()
+                .uri(uriBuilder -> uriBuilder.path("/api/research-groups/update/{id}").build(researchGroupDto.getId()))
+                .bodyValue(updateResearchGroupCommand)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(Problem.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertEquals("Budget musn't be negative!",result.getDetail());
+        assertEquals(Status.BAD_REQUEST,result.getStatus());
+        assertEquals("Not Valid Parameter",result.getTitle());
+        assertEquals("parameter/not-valid",result.getType().getPath());
+    }
+
+    @Test
+    @DisplayName("Delete a research group")
+    void testDeleteResearchGroup(){
+        webTestClient
+                .delete()
+                .uri(uriBuilder -> uriBuilder.path("/api/research-groups/delete/{id}").build(researchGroupDto.getId()))
+                .exchange()
+                .expectStatus().isNoContent();
+
+        List<ResearchGroupDto> result=webTestClient
+                .get()
+                .uri("/api/research-groups")
+                .exchange()
+                .expectBodyList(ResearchGroupDto.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(result)
+                .hasSize(3)
+                .contains(new ResearchGroupDto(1L,"Nano-Bio-Imaging Core Facility",LocalDate.of(2019,7,19),3, Location.ÁOK_ÚJ_ÉPÜLET,13,new HashSet<>()))
+                .extracting(ResearchGroupDto::getName)
+                .doesNotContain("FEMTO-Lézeres Csoport")
+                .containsOnly("NAP kutatócsoport","Nano-Bio-Imaging Core Facility","Neuroendokrinológia");
     }
 }

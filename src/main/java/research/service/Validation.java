@@ -1,14 +1,11 @@
 package research.service;
 
-import research.exceptions.ProjectAlreadyExistsException;
 import research.exceptions.ProjectNotValidException;
-import research.exceptions.researchGroupNotValidException;
+import research.exceptions.ResearchGroupNotValidException;
 import research.model.Location;
 import research.model.Project;
 import research.model.ResearchGroup;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.time.LocalDate;
 
 public class Validation {
@@ -43,7 +40,7 @@ public class Validation {
                 && checkValidLocation(researchGroupToValidate.getLocation());
 
         if (!isValid) {
-            throw new researchGroupNotValidException(researchGroupToValidate);
+            throw new ResearchGroupNotValidException(researchGroupToValidate);
         }
         return researchGroupToValidate;
     }
