@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Bat files for Docker ###
-.batsForDocker
+batsForDocker/
