@@ -96,10 +96,10 @@ növekvő vagy csökkenő sorrendben (`OrderType`) lehet végrehajtani.
 * Klasszikus háromrétegű alkalmazást valósítottam meg Java Spring backenddel és REST webszolgáltatásokkal amely MariaDB adatbázisban tárolja az adatokat.
 * Az SQL adatbázist kezelő réteget (`Repository`) Spring Data JPA-val valósítottam meg.
 * Az adatbázis inicializálását Flyway script végzi.
-* Az üzleti logika réteg megvalósítása a `...Service` osztály feladata.
-* A REST szolgáltatásokat a Controller réteg kezeli. 
-* A hibákat saját Exception-ök kezelik, valamint a CreateCommand-okban is alkalmazok validációt.
+* Az üzleti logika réteg megvalósítása a `Service` osztály feladata.
+* A REST szolgáltatásokat a Controller réteg valósítja meg. 
+* A hibák kezelésére saját kivételeket használok, valamint a CreateCommand-okban is alkalmazok validációt.
 * Swagger hozza létre az interaktív dokumentációs felületet.
 * WebClient-tel végeztem az integrációs tesztlést, ami a kód sorainak 82%-át lefedi.
 * További manuális tesztelést a *.http fileok tesznek lehetővé
-* Az alkalmazást Docker konténerből futtatom.
+* Az alkalmazás futtatásához Docker hálózatot hoztam létre, amely tartalmazza a konténereket amelyekben a MariaDB adatbázis és a hozzá kapcsolodó alkalmazás futtnak.
