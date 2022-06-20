@@ -1,1 +1,0 @@
-docker network inspect research-net > 06-LocationsNet.txt

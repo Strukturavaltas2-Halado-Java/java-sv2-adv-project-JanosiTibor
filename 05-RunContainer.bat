@@ -1,1 +1,0 @@
-docker run -d -e SPRING_DATASOURCE_URL=jdbc:mariadb://research-net-mariadb/research -e SPRING_DATASOURCE_USERNAME=research -e SPRING_DATASOURCE_PASSWORD=research -p 8080:8080 --network research-net --name research research > 05-ContainerRun.txt
