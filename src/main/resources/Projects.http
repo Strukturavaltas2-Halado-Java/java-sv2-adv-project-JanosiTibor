@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 Accept: application/json
 
@@ -9,7 +9,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 Accept: application/json
 
@@ -20,7 +20,30 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "E2 klasszikus kötőhelyei",
+  "startDate": "2020-01-01",
+  "budget": 45
+}
+
+###
+POST http://localhost:8081/api/projects
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "E2 nem klasszikus kötőhelyei",
+  "startDate": "2020-05-14",
+  "budget": 45
+}
+
+###
+
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 Accept: application/json
 
@@ -31,7 +54,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 Accept: application/json
 
@@ -42,7 +65,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects
+POST http://localhost:8081/api/projects
 Content-Type: application/json
 Accept: application/json
 
@@ -57,35 +80,35 @@ GET http://localhost:8080/api/projects
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?orderBy=startDate
+GET http://localhost:8081/api/projects?orderBy=startDate
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?orderBy=startDate&OrderType=desc
+GET http://localhost:8081/api/projects?orderBy=startDate&OrderType=desc
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?orderBy=budget
+GET http://localhost:8081/api/projects?orderBy=budget
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?nameLike=ec
+GET http://localhost:8081/api/projects?nameLike=e2
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?nameLike=ec&minBudget=15000000
+GET http://localhost:8081/api/projects?nameLike=e2&minBudget=15000000
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?startBefore=2022-07-30&minBudget=15000000
+GET http://localhost:8081/api/projects?startBefore=2022-07-30&minBudget=15000000
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects?startAfter=2021-07-30&startBefore=2022-07-30
+GET http://localhost:8081/api/projects?startAfter=2021-07-30&startBefore=2022-07-30
 Content-Type: application/json
 
 ###
-PUT http://localhost:8080/api/projects/update/4
+PUT http://localhost:8081/api/projects/update/4
 Content-Type: application/json
 Accept: application/json
 
@@ -96,7 +119,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/projects/update/4
+PUT http://localhost:8081/api/projects/update/4
 Content-Type: application/json
 Accept: application/json
 
@@ -105,7 +128,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/projects/update/4
+PUT http://localhost:8081/api/projects/update/4
 Content-Type: application/json
 Accept: application/json
 
@@ -114,7 +137,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/projects/update/4
+PUT http://localhost:8081/api/projects/update/4
 Content-Type: application/json
 Accept: application/json
 
@@ -123,7 +146,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/3/add-group
+POST http://localhost:8081/api/projects/3/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -136,7 +159,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/3/add-group
+POST http://localhost:8081/api/projects/3/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -149,7 +172,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/3/add-group
+POST http://localhost:8081/api/projects/3/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -162,7 +185,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/projects/11/add-group
+POST http://localhost:8081/api/projects/11/add-group
 Content-Type: application/json
 Accept: application/json
 
@@ -175,27 +198,27 @@ Accept: application/json
 }
 
 ###
-GET http://localhost:8080/api/projects/12/add-group?groupId=18
+GET http://localhost:8081/api/projects/12/add-group?groupId=18
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects/10/add-group?groupId=12
+GET http://localhost:8081/api/projects/10/add-group?groupId=12
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/projects/10/add-group?groupId=15
+GET http://localhost:8081/api/projects/10/add-group?groupId=15
 Content-Type: application/json
 ###
-GET http://localhost:8080/api/projects/10/delete-group?groupId=12
+GET http://localhost:8081/api/projects/10/delete-group?groupId=12
 Content-Type: application/json
 
 ###
-DELETE http://localhost:8080/api/projects/delete/13
+DELETE http://localhost:8081/api/projects/delete/13
 Content-Type: application/json
 Accept: application/json###
 ###
 
-GET http://localhost:8080/api/projects/10
+GET http://localhost:8081/api/projects/10
 Content-Type: application/json
 
 ###

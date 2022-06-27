@@ -16,7 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/research-groups")
+@RequestMapping("/api/research-groups")
 public class ResearchGroupController {
     private final ProjectsAndGroupsService projectsAndGroupsService;
 

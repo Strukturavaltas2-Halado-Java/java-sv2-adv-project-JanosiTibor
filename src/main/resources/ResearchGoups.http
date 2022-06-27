@@ -1,4 +1,4 @@
-POST http://localhost:8080/api/research-groups
+POST http://localhost:8081/api/research-groups
 Content-Type: application/json
 Accept: application/json
 
@@ -11,8 +11,34 @@ Accept: application/json
 }
 
 ###
+POST http://localhost:8081/api/research-groups
+Content-Type: application/json
+Accept: application/json
 
-POST http://localhost:8080/api/research-groups
+{
+  "name": "Neurodegenaratív betegségek kutatócsoportja",
+  "founded": "2020-01-01",
+  "countOfResearchers": 8,
+  "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
+  "budget": 9
+}
+
+###
+POST http://localhost:8081/api/research-groups
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Neurális hálózatok kutatócsoport",
+  "founded": "2019-05-11",
+  "countOfResearchers": 14,
+  "location": "ÁOK_ÚJ_ÉPÜLET",
+  "budget": 7
+}
+
+###
+
+POST http://localhost:8081/api/research-groups
 Content-Type: application/json
 Accept: application/json
 
@@ -25,7 +51,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/research-groups
+POST http://localhost:8081/api/research-groups
 Content-Type: application/json
 Accept: application/json
 
@@ -38,7 +64,7 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/research-groups
+POST http://localhost:8081/api/research-groups
 Content-Type: application/json
 Accept: application/json
 
@@ -51,12 +77,12 @@ Accept: application/json
 }
 
 ###
-POST http://localhost:8080/api/research-groups
+POST http://localhost:8081/api/research-groups
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "SzövettaniMikroszkópia",
+  "name": "Szövettani Mikroszkópia",
   "founded": "2021-12-31",
   "countOfResearchers": 5,
   "location": "SZENTÁGOTHAI_KUTATÓKÖZPONT",
@@ -64,42 +90,40 @@ Accept: application/json
 }
 
 ###
-GET http://localhost:8080/api/research-groups
+GET http://localhost:8081/api/research-groups
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/research-groups?nameLike=ma
+GET http://localhost:8081/api/research-groups?nameLike=ma
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/research-groups?nameLike=ma&minCountOfResearchers=4
+GET http://localhost:8081/api/research-groups?nameLike=ma&minCountOfResearchers=4
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/research-groups?minBudget=15000000
+GET http://localhost:8081/api/research-groups?minBudget=15000000
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/research-groups?orderBy=budget
+GET http://localhost:8081/api/research-groups?orderBy=budget
 Content-Type: application/json
 
 ###
-GET http://localhost:8080/api/research-groups?orderBy=budget&OrderType=desc
+GET http://localhost:8081/api/research-groups?orderBy=budget&OrderType=desc
 Content-Type: application/json
 
 ###
-DELETE http://localhost:8080/api/research-groups/delete/4
+DELETE http://localhost:8081/api/research-groups/delete/20
 Content-Type: application/json
 Accept: application/json
 
-
 ###
-
-GET http://localhost:8080/api/research-groups/11
+GET http://localhost:8081/api/research-groups/11
 Content-Type: application/json
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
@@ -112,7 +136,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
@@ -121,7 +145,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
@@ -130,7 +154,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
@@ -139,7 +163,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 
@@ -148,7 +172,7 @@ Accept: application/json
 }
 
 ###
-PUT http://localhost:8080/api/research-groups/update/11
+PUT http://localhost:8081/api/research-groups/update/11
 Content-Type: application/json
 Accept: application/json
 

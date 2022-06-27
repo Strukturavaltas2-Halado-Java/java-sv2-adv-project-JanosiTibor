@@ -5,6 +5,12 @@
 A választható feladatok közül "kutatások nyilvántartása" című projektet választottam.
  A megvalósított alkalmazás projektek és kutatócsoportok kapcsolatát kezeli. Azért választottam ezt mert a projektek és a kutatócsoportok közt m-n a természetes kapcsolat ami viszonylag gyakran fordul elő a valóságban is. Emiatt bízom, benne, hogy a feladat elkészítésével élesben előforduló problémákra és feladatokra készülök fel.
 
+Az alkalmazás Java Spring Boot keretrendszerrel megvalósított backend, amely a klaszikus három réteggel rendelkezik:
+- a külvilággal a controller rétegben megvalósított RESTful webszolgáltatás végpontjain keresztül kommunikál
+- a MariaDB adatbázissal a Spring Data JPA-val megvalósított repository réteg tartja a kapcsolatot
+- a kettő közt helyezkedik el az üzleti logikát megvalósító service réteg
+
+
 ## Felépítés
 
 ### ResearchGroup
@@ -93,7 +99,7 @@ növekvő vagy csökkenő sorrendben (`OrderType`) lehet végrehajtani.
 
 ## Technológiai részletek
 
-* Klasszikus háromrétegű alkalmazást valósítottam meg Java Spring backenddel és REST webszolgáltatásokkal amely MariaDB adatbázisban tárolja az adatokat.
+* Klasszikus háromrétegű alkalmazást valósítottam meg Java Spring backenddel és RESTful webszolgáltatásokkal amely MariaDB adatbázisban tárolja az adatokat.
 * Az SQL adatbázist kezelő réteget (`Repository`) Spring Data JPA-val valósítottam meg.
 * Az adatbázis inicializálását `Flyway` script végzi.
 * Az üzleti logika réteg megvalósítása a `Service` osztály feladata.
